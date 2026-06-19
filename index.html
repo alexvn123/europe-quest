@@ -3,56 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Europe Quest</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 }
 
 body{
-color:white;
-min-height:100vh;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background-size:cover;
-background-position:center;
+color:white;
 transition:0.5s;
 }
 
 .container{
 width:90%;
 max-width:900px;
-background:rgba(0,0,0,0.65);
+background:rgba(0,0,0,.65);
 padding:25px;
 border-radius:20px;
 text-align:center;
+backdrop-filter:blur(5px);
 }
 
 .hidden{
 display:none;
 }
 
-h1{
-margin-bottom:15px;
-}
-
 #progress{
 width:100%;
 height:20px;
-background:#444;
+background:#333;
 border-radius:20px;
 overflow:hidden;
 margin-bottom:20px;
 }
 
 #bar{
-height:100%;
 width:0%;
+height:100%;
 background:gold;
 }
 
@@ -67,54 +67,60 @@ cursor:pointer;
 }
 
 button:hover{
-transform:scale(1.02);
+transform:scale(1.03);
 }
 
 #status{
 display:flex;
 justify-content:space-between;
-margin:15px 0;
 font-size:22px;
+margin:15px 0;
 }
 
 #timer{
-font-size:24px;
+font-size:25px;
 color:gold;
 margin:10px;
 }
 
 #message{
 font-size:28px;
-margin-top:15px;
 font-weight:bold;
+margin-top:10px;
 }
 
 #trophy{
-font-size:120px;
+font-size:150px;
 animation:spin 4s linear infinite;
 }
 
 @keyframes spin{
+
 100%{
 transform:rotate(360deg);
 }
+
 }
 
-input{
-padding:12px;
-width:70%;
-border:none;
-border-radius:10px;
-font-size:18px;
+.cover{
+width:100%;
+max-width:500px;
+border-radius:15px;
+margin-bottom:20px;
 }
+
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
 
+<!-- START SCREEN -->
+
 <div id="startScreen">
+
+<img src="images/cover.jpg" class="cover">
 
 <h1>🌍 EUROPE QUEST</h1>
 
@@ -122,13 +128,24 @@ font-size:18px;
 
 <br>
 
-<input id="playerName" placeholder="Enter your name">
+<input
+id="playerName"
+placeholder="Enter your name"
+style="
+padding:10px;
+width:70%;
+border-radius:10px;
+border:none;">
 
 <br><br>
 
-<button onclick="startGame()">START GAME</button>
+<button onclick="startGame()">
+START GAME
+</button>
 
 </div>
+
+<!-- GAME -->
 
 <div id="gameScreen" class="hidden">
 
@@ -139,11 +156,20 @@ font-size:18px;
 </div>
 
 <div id="status">
-<div id="lives">❤️❤️❤️</div>
-<div id="xp">XP: 0</div>
+
+<div id="lives">
+❤️❤️❤️
 </div>
 
-<div id="timer">⏱️ 15</div>
+<div id="xp">
+XP: 0
+</div>
+
+</div>
+
+<div id="timer">
+⏱️ 15
+</div>
 
 <h2 id="question"></h2>
 
@@ -153,96 +179,158 @@ font-size:18px;
 
 </div>
 
+<!-- END -->
+
 <div id="endScreen" class="hidden">
 
 <h1 id="endTitle"></h1>
 
-<div id="trophy">🏆</div>
+<div id="trophy">
+🏆
+</div>
 
 <h2 id="finalScore"></h2>
 
 <br>
 
-<button onclick="location.reload()">PLAY AGAIN</button>
+<button onclick="location.reload()">
+PLAY AGAIN
+</button>
 
 </div>
 
 </div>
+
+<audio id="correctSound" src="sounds/correct.mp3"></audio>
+<audio id="wrongSound" src="sounds/wrong.mp3"></audio>
+<audio id="victorySound" src="sounds/victory.mp3"></audio>
 
 <script>
 
 const backgrounds = [
-"https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=1600",
-"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600",
-"https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600",
-"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600",
-"https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1600",
-"https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1600",
-"https://www.google.com/search?q=torre+eiffel&sca_esv=bec4f44b4fc03395&udm=2&biw=629&bih=582&sxsrf=ANbL-n5CN_KLNqs9yjigHh2jeYSuEy8TdA%3A1781828791319&ei=t4w0atyBE9jekvQPupeDuAk&oq=tore+i&gs_lp=Egtnd3Mtd2l6LWltZyIGdG9yZSBpKgIIADIMEAAYgAQYChgLGLEDMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLSK0yUOgIWMAjcAF4AJABAJgBlgGgAakGqgEDMC42uAEByAEA-AEBmAIHoALvBqgCCsICChAjGMkCGOoCGCfCAgcQIxjJAhgnwgILEAAYgAQYsQMYgwHCAgoQABiABBiKBRhDwgIOEAAYgAQYigUYsQMYgwHCAgUQABiABMICEBAAGIAEGIoFGEMYsQMYgwHCAggQABiABBixA8ICBxAAGIAEGAqYAxOSBwMxLjagB6IisgcDMC42uAfcBsIHBTItNS4yyAc3gAgB&sclient=gws-wiz-img#sv=CAMSURoyKhBlLVJ3d3hfcU1Cb1c1MW5NMg5Sd3d4X3FNQm9XNTFuTToOUlRpbUZlTVdtZ0tiT00gBCoXCgFzEhBlLVJ3d3hfcU1Cb1c1MW5NGAEwARgHII3-_ckLSggQARgBIAEoAQ",
-"https://www.google.com/search?sca_esv=bec4f44b4fc03395&sxsrf=ANbL-n4LvylH4bSMQZrzDlfVpUks4ayC9g:1781828594628&udm=2&fbs=ADc_l-bpk8W4E-qsVlOvbGJcDwpn60DczFdcvPnuv8WQohHLTaMb_WtLz8zQ41bNqiqMK_31HwkbxJugjclc8XCOo41Pje4Aev1OudVtc4yJW2g4XdPY_vrXlfk3Bgr4twGMOaWXsJ1lHn--JGY593T-k7-bJTSlMautLwyo3Y_SSZBQEtEOWNdgrlg622896nXONZuQeJIN1krv3mkJQN_lo5zOda9PVw&q=alps&sa=X&ved=2ahUKEwj1sbvjhJKVAxWzQjABHQOAOkwQtKgLegQIGhAB&biw=629&bih=582&dpr=1.53#sv=CAMSURoyKhBlLUNYMUpPVEZJdDJISGJNMg5DWDFKT1RGSXQySEhiTToOb3NLa1pwZUx3RXhRWU0gBCoXCgFzEhBlLUNYMUpPVEZJdDJISGJNGAEwARgHILO3sY0KSggQARgBIAEoAQ",
-"https://www.google.com/search?q=mapa+&sca_esv=bec4f44b4fc03395&udm=2&biw=629&bih=582&sxsrf=ANbL-n5HlgdnvIPF6jIEVUtgLczrtBBTfg%3A1781828741036&ei=hYw0auLUAdqTwbkPgMGSwAY&ved=0ahUKEwiiq6OphZKVAxXaSTABHYCgBGgQ4dUDCBM&uact=5&oq=mapa+&gs_lp=Egtnd3Mtd2l6LWltZyIFbWFwYSAyDRAAGIAEGIoFGEMYsQMyDRAAGIAEGIoFGEMYsQMyChAAGIAEGIoFGEMyDRAAGIAEGIoFGEMYsQMyCBAAGIAEGLEDMg4QABiABBiKBRixAxiDATIFEAAYgAQyCBAAGIAEGLEDMgUQABiABDIIEAAYgAQYsQNIwjVQkg5Yqy1wAXgAkAEAmAGPAaAB_gSqAQMwLjW4AQPIAQD4AQGYAgagAsAFqAIKwgIKECMYyQIY6gIYJ8ICBxAjGMkCGCfCAgsQABiABBixAxiDAcICEBAAGIAEGIoFGEMYsQMYgwHCAg0QABiABBixAxiDARgKmAMTkgcDMS41oAfDHLIHAzAuNbgHrAXCBwUyLTQuMsgHLYAIAQ&sclient=gws-wiz-img#sv=CAMSURoyKhBlLXMwX3hqOGREeTBKUHdNMg5zMF94ajhkRHkwSlB3TToOLUwtS1UtMVdIWnlESk0gBCoXCgFzEhBlLXMwX3hqOGREeTBKUHdNGAEwARgHIK_l1DhKCBABGAEgASgB",
-"https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=1600"
+
+"images/europe-map.jpg",
+"images/atlantic-ocean.jpg",
+"images/eu-flag.jpg",
+"images/berlin.jpg",
+"images/italy.jpg",
+"images/colosseum.jpg",
+"images/eiffel-tower.jpg",
+"images/alps.jpg",
+"images/europe-countries.jpg",
+"images/european-union.jpg"
+
 ];
 
 const questions = [
 
 {
 question:"Where is Europe located?",
-answers:["Northern Hemisphere","Southern Hemisphere","Africa","Asia"],
+answers:[
+"Northern Hemisphere",
+"Southern Hemisphere",
+"Africa",
+"Asia"
+],
 correct:0
 },
 
 {
 question:"What ocean borders Europe to the west?",
-answers:["Atlantic Ocean","Pacific Ocean","Indian Ocean","Arctic Ocean"],
+answers:[
+"Atlantic Ocean",
+"Pacific Ocean",
+"Indian Ocean",
+"Arctic Ocean"
+],
 correct:0
 },
 
 {
 question:"How many stars are on the European Union flag?",
-answers:["10","12","15","20"],
+answers:[
+"10",
+"12",
+"15",
+"20"
+],
 correct:1
 },
 
 {
 question:"Which language is common in Europe?",
-answers:["German","Japanese","Hindi","Chinese"],
+answers:[
+"German",
+"Japanese",
+"Hindi",
+"Chinese"
+],
 correct:0
 },
 
 {
 question:"Which country is famous for pizza and pasta?",
-answers:["France","Germany","Italy","Spain"],
+answers:[
+"France",
+"Germany",
+"Italy",
+"Spain"
+],
 correct:2
 },
 
 {
 question:"Which civilization influenced European philosophy and politics?",
-answers:["Roman Empire","Maya","Inca","Aztec"],
+answers:[
+"Roman Empire",
+"Maya",
+"Inca",
+"Aztec"
+],
 correct:0
 },
 
 {
 question:"Where is the Eiffel Tower located?",
-answers:["Italy","Spain","France","Germany"],
+answers:[
+"Italy",
+"Spain",
+"France",
+"Germany"
+],
 correct:2
 },
 
 {
 question:"Which mountain range is in Europe?",
-answers:["Andes","Alps","Rockies","Himalayas"],
+answers:[
+"Andes",
+"Alps",
+"Rockies",
+"Himalayas"
+],
 correct:1
 },
 
 {
 question:"Europe has more than...",
-answers:["10 countries","20 countries","40 countries","30 countries"],
+answers:[
+"10 countries",
+"20 countries",
+"40 countries",
+"30 countries"
+],
 correct:2
 },
 
 {
 question:"What do the stars on the EU flag represent?",
-answers:["War","Tourism","Money","Unity and Harmony"],
+answers:[
+"War",
+"Tourism",
+"Money",
+"Unity and Harmony"
+],
 correct:3
 }
 
@@ -284,27 +372,26 @@ document.getElementById("timer").innerHTML =
 
 if(timer<=0){
 
-clearInterval(interval);
-
 wrongAnswer();
 
 }
 
 },1000);
 
-const q = questions[currentQuestion];
+let q = questions[currentQuestion];
 
 document.getElementById("question").innerHTML =
 q.question;
 
-const answersDiv =
+let answersDiv =
 document.getElementById("answers");
 
 answersDiv.innerHTML="";
 
 q.answers.forEach((answer,index)=>{
 
-const btn = document.createElement("button");
+let btn =
+document.createElement("button");
 
 btn.innerHTML = answer;
 
@@ -324,36 +411,43 @@ clearInterval(interval);
 
 if(index===questions[currentQuestion].correct){
 
-xp += 100;
+xp+=100;
 
-document.getElementById("message").innerHTML =
+correctSound.play();
+
+message.innerHTML =
 "✅ Mission Complete!";
 
-}else{
-
-wrongAnswer();
-return;
+setTimeout(nextQuestion,1000);
 
 }
+else{
 
-setTimeout(nextQuestion,1000);
+wrongAnswer();
+
+}
 
 }
 
 function wrongAnswer(){
 
+clearInterval(interval);
+
 lives--;
 
-updateUI();
+wrongSound.play();
 
-document.getElementById("message").innerHTML =
+message.innerHTML =
 "❌ Wrong Answer";
+
+updateUI();
 
 if(lives<=0){
 
 setTimeout(()=>endGame(false),1000);
 
-}else{
+}
+else{
 
 setTimeout(nextQuestion,1000);
 
@@ -361,29 +455,15 @@ setTimeout(nextQuestion,1000);
 
 }
 
-function updateUI(){
-
-document.getElementById("lives").innerHTML =
-"❤️".repeat(lives);
-
-document.getElementById("xp").innerHTML =
-"XP: " + xp;
-
-document.getElementById("bar").style.width =
-(currentQuestion/questions.length*100)+"%";
-
-}
-
 function nextQuestion(){
 
-document.getElementById("message").innerHTML="";
+message.innerHTML="";
 
 currentQuestion++;
 
 if(currentQuestion>=questions.length){
 
 endGame(true);
-
 return;
 
 }
@@ -392,27 +472,40 @@ loadQuestion();
 
 }
 
+function updateUI(){
+
+livesDiv.innerHTML =
+"❤️".repeat(lives);
+
+xpDiv.innerHTML =
+"XP: " + xp;
+
+bar.style.width =
+(currentQuestion/questions.length*100)+"%";
+
+}
+
 function endGame(win){
 
-document.getElementById("gameScreen")
-.classList.add("hidden");
-
-document.getElementById("endScreen")
-.classList.remove("hidden");
+gameScreen.classList.add("hidden");
+endScreen.classList.remove("hidden");
 
 if(win){
 
-document.getElementById("endTitle").innerHTML =
+victorySound.play();
+
+endTitle.innerHTML =
 "🏆 YOU WON THE GAME!";
 
-}else{
+}
+else{
 
-document.getElementById("endTitle").innerHTML =
+endTitle.innerHTML =
 "💀 GAME OVER";
 
 }
 
-document.getElementById("finalScore").innerHTML =
+finalScore.innerHTML =
 "Final XP: " + xp;
 
 }
