@@ -1,515 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Europe Quest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-<title>Europe Quest</title>
+        body {
+            background-color: #f0f4f8;
+            padding: 20px;
+            line-height: 1.6;
+        }
 
-<style>
+        .contenedor {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
 
-body{
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-transition:0.5s;
-}
+        .imagen {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
 
-.container{
-width:90%;
-max-width:900px;
-background:rgba(0,0,0,.65);
-padding:25px;
-border-radius:20px;
-text-align:center;
-backdrop-filter:blur(5px);
-}
+        .pregunta {
+            margin: 25px 0;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            border-left: 4px solid #3498db;
+        }
 
-.hidden{
-display:none;
-}
+        .pregunta h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
 
-#progress{
-width:100%;
-height:20px;
-background:#333;
-border-radius:20px;
-overflow:hidden;
-margin-bottom:20px;
-}
+        .opcion {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-#bar{
-width:0%;
-height:100%;
-background:gold;
-}
+        .opcion:hover {
+            background-color: #e3f2fd;
+        }
 
-button{
-width:100%;
-padding:14px;
-margin:8px 0;
-border:none;
-border-radius:10px;
-font-size:18px;
-cursor:pointer;
-}
+        .correcta {
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+        }
 
-button:hover{
-transform:scale(1.03);
-}
+        .incorrecta {
+            background-color: #f8d7da;
+            border: 2px solid #dc3545;
+        }
 
-#status{
-display:flex;
-justify-content:space-between;
-font-size:22px;
-margin:15px 0;
-}
-
-#timer{
-font-size:25px;
-color:gold;
-margin:10px;
-}
-
-#message{
-font-size:28px;
-font-weight:bold;
-margin-top:10px;
-}
-
-#trophy{
-font-size:150px;
-animation:spin 4s linear infinite;
-}
-
-@keyframes spin{
-
-100%{
-transform:rotate(360deg);
-}
-
-}
-
-.cover{
-width:100%;
-max-width:500px;
-border-radius:15px;
-margin-bottom:20px;
-}
-
-</style>
+        #resultado {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="contenedor">
+    <h1>Europe Quest 🇪🇺</h1>
 
-<!-- START SCREEN -->
+    <!-- Imagen de portada -->
+    <img src="imagenes/cover.jpg" alt="Portada del juego" class="imagen">
 
-<div id="startScreen">
 
-<img src="images/cover.jpg" class="cover">
+    <!-- PREGUNTA 1 -->
+    <div class="pregunta">
+        <h3>1. Where is Europe located?</h3>
+        <label class="opcion" data-correct="false">A) Southern Hemisphere</label>
+        <label class="opcion" data-correct="true">B) Northern Hemisphere</label>
+        <label class="opcion" data-correct="false">C) Africa</label>
+        <label class="opcion" data-correct="false">D) Asia</label>
+    </div>
 
-<h1>🌍 EUROPE QUEST</h1>
+    <!-- PREGUNTA 2 -->
+    <div class="pregunta">
+        <h3>2. What ocean borders Europe to the west?</h3>
+        <img src="imagenes/atlantic-ocean.jpg" alt="Océano Atlántico" class="imagen">
+        <label class="opcion" data-correct="true">A) Atlantic Ocean</label>
+        <label class="opcion" data-correct="false">B) Pacific Ocean</label>
+        <label class="opcion" data-correct="false">C) Indian Ocean</label>
+        <label class="opcion" data-correct="false">D) Southern Ocean</label>
+    </div>
 
-<p>Explore Europe and become the Europe Master!</p>
+    <!-- PREGUNTA 3 -->
+    <div class="pregunta">
+        <h3>3. How many stars are on the European Union flag?</h3>
+        <img src="imagenes/eu-flag.jpg" alt="Bandera de la Unión Europea" class="imagen">
+        <label class="opcion" data-correct="false">A) 10</label>
+        <label class="opcion" data-correct="true">B) 12</label>
+        <label class="opcion" data-correct="false">C) 15</label>
+        <label class="opcion" data-correct="false">D) 20</label>
+    </div>
 
-<br>
+    <!-- PREGUNTA 4 -->
+    <div class="pregunta">
+        <h3>4. Which language is common in Europe?</h3>
+        <label class="opcion" data-correct="true">A) German</label>
+        <label class="opcion" data-correct="false">B) Japanese</label>
+        <label class="opcion" data-correct="false">C) Hindi</label>
+        <label class="opcion" data-correct="false">D) Chinese</label>
+    </div>
 
-<input
-id="playerName"
-placeholder="Enter your name"
-style="
-padding:10px;
-width:70%;
-border-radius:10px;
-border:none;">
+    <!-- PREGUNTA 5 -->
+    <div class="pregunta">
+        <h3>5. Which country is famous for pizza and pasta?</h3>
+        <img src="imagenes/italy.jpg" alt="Italia" class="imagen">
+        <label class="opcion" data-correct="false">A) France</label>
+        <label class="opcion" data-correct="false">B) Germany</label>
+        <label class="opcion" data-correct="true">C) Italy</label>
+        <label class="opcion" data-correct="false">D) Spain</label>
+    </div>
 
-<br><br>
+    <!-- PREGUNTA 6 -->
+    <div class="pregunta">
+        <h3>6. Which civilization influenced European philosophy and politics?</h3>
+        <img src="imagenes/colosseum.jpg" alt="Imperio Romano" class="imagen">
+        <label class="opcion" data-correct="true">A) Roman Empire</label>
+        <label class="opcion" data-correct="false">B) Maya</label>
+        <label class="opcion" data-correct="false">C) Inca</label>
+        <label class="opcion" data-correct="false">D) Aztec</label>
+    </div>
 
-<button onclick="startGame()">
-START GAME
-</button>
+    <!-- PREGUNTA 7 -->
+    <div class="pregunta">
+        <h3>7. Where is the Eiffel Tower located?</h3>
+        <img src="imagenes/eiffel-tower.jpg" alt="Torre Eiffel" class="imagen">
+        <label class="opcion" data-correct="false">A) Italy</label>
+        <label class="opcion" data-correct="false">B) Spain</label>
+        <label class="opcion" data-correct="true">C) France</label>
+        <label class="opcion" data-correct="false">D) Germany</label>
+    </div>
 
+    <!-- PREGUNTA 8 -->
+    <div class="pregunta">
+        <h3>8. Which mountain range is in Europe?</h3>
+        <img src="imagenes/alps.jpg" alt="Montes Alpes" class="imagen">
+        <label class="opcion" data-correct="false">A) Andes</label>
+        <label class="opcion" data-correct="true">B) Alps</label>
+        <label class="opcion" data-correct="false">C) Rockies</label>
+        <label class="opcion" data-correct="false">D) Himalayas</label>
+    </div>
+
+    <!-- PREGUNTA 9 -->
+    <div class="pregunta">
+        <h3>9. Europe has more than...</h3>
+        <img src="imagenes/europe-countries.jpg" alt="Mapa de países de Europa" class="imagen">
+        <label class="opcion" data-correct="false">A) 10 countries</label>
+        <label class="opcion" data-correct="false">B) 20 countries</label>
+        <label class="opcion" data-correct="true">C) 40 countries</label>
+        <label class="opcion" data-correct="false">D) 30 countries</label>
+    </div>
+
+    <!-- PREGUNTA 10 -->
+    <div class="pregunta">
+        <h3>10. What do the stars on the EU flag represent?</h3>
+        <img src="imagenes/european-union.jpg" alt="Unión Europea" class="imagen">
+        <label class="opcion" data-correct="false">A) War</label>
+        <label class="opcion" data-correct="false">B) Tourism</label>
+        <label class="opcion" data-correct="false">C) Money</label>
+        <label class="opcion" data-correct="true">D) Unity and Harmony</label>
+    </div>
+
+
+    <div id="resultado"></div>
 </div>
 
-<!-- GAME -->
-
-<div id="gameScreen" class="hidden">
-
-<h1>🎮 EUROPE QUEST</h1>
-
-<div id="progress">
-<div id="bar"></div>
-</div>
-
-<div id="status">
-
-<div id="lives">
-❤️❤️❤️
-</div>
-
-<div id="xp">
-XP: 0
-</div>
-
-</div>
-
-<div id="timer">
-⏱️ 15
-</div>
-
-<h2 id="question"></h2>
-
-<div id="answers"></div>
-
-<div id="message"></div>
-
-</div>
-
-<!-- END -->
-
-<div id="endScreen" class="hidden">
-
-<h1 id="endTitle"></h1>
-
-<div id="trophy">
-🏆
-</div>
-
-<h2 id="finalScore"></h2>
-
-<br>
-
-<button onclick="location.reload()">
-PLAY AGAIN
-</button>
-
-</div>
-
-</div>
-
-<audio id="correctSound" src="sounds/correct.mp3"></audio>
-<audio id="wrongSound" src="sounds/wrong.mp3"></audio>
-<audio id="victorySound" src="sounds/victory.mp3"></audio>
 
 <script>
-
-const backgrounds = [
-
-"images/europe-map.jpg",
-"images/atlantic-ocean.jpg",
-"images/eu-flag.jpg",
-"images/berlin.jpg",
-"images/italy.jpg",
-"images/colosseum.jpg",
-"images/eiffel-tower.jpg",
-"images/alps.jpg",
-"images/europe-countries.jpg",
-"images/european-union.jpg"
-
-];
-
-const questions = [
-
-{
-question:"Where is Europe located?",
-answers:[
-"Northern Hemisphere",
-"Southern Hemisphere",
-"Africa",
-"Asia"
-],
-correct:0
-},
-
-{
-question:"What ocean borders Europe to the west?",
-answers:[
-"Atlantic Ocean",
-"Pacific Ocean",
-"Indian Ocean",
-"Arctic Ocean"
-],
-correct:0
-},
-
-{
-question:"How many stars are on the European Union flag?",
-answers:[
-"10",
-"12",
-"15",
-"20"
-],
-correct:1
-},
-
-{
-question:"Which language is common in Europe?",
-answers:[
-"German",
-"Japanese",
-"Hindi",
-"Chinese"
-],
-correct:0
-},
-
-{
-question:"Which country is famous for pizza and pasta?",
-answers:[
-"France",
-"Germany",
-"Italy",
-"Spain"
-],
-correct:2
-},
-
-{
-question:"Which civilization influenced European philosophy and politics?",
-answers:[
-"Roman Empire",
-"Maya",
-"Inca",
-"Aztec"
-],
-correct:0
-},
-
-{
-question:"Where is the Eiffel Tower located?",
-answers:[
-"Italy",
-"Spain",
-"France",
-"Germany"
-],
-correct:2
-},
-
-{
-question:"Which mountain range is in Europe?",
-answers:[
-"Andes",
-"Alps",
-"Rockies",
-"Himalayas"
-],
-correct:1
-},
-
-{
-question:"Europe has more than...",
-answers:[
-"10 countries",
-"20 countries",
-"40 countries",
-"30 countries"
-],
-correct:2
-},
-
-{
-question:"What do the stars on the EU flag represent?",
-answers:[
-"War",
-"Tourism",
-"Money",
-"Unity and Harmony"
-],
-correct:3
-}
-
-];
-
-let currentQuestion = 0;
-let lives = 3;
-let xp = 0;
-let timer = 15;
-let interval;
-
-function startGame(){
-
-document.getElementById("startScreen").classList.add("hidden");
-document.getElementById("gameScreen").classList.remove("hidden");
-
-loadQuestion();
-
-}
-
-function loadQuestion(){
-
-document.body.style.backgroundImage =
-`url(${backgrounds[currentQuestion]})`;
-
-clearInterval(interval);
-
-timer = 15;
-
-document.getElementById("timer").innerHTML =
-"⏱️ " + timer;
-
-interval = setInterval(()=>{
-
-timer--;
-
-document.getElementById("timer").innerHTML =
-"⏱️ " + timer;
-
-if(timer<=0){
-
-wrongAnswer();
-
-}
-
-},1000);
-
-let q = questions[currentQuestion];
-
-document.getElementById("question").innerHTML =
-q.question;
-
-let answersDiv =
-document.getElementById("answers");
-
-answersDiv.innerHTML="";
-
-q.answers.forEach((answer,index)=>{
-
-let btn =
-document.createElement("button");
-
-btn.innerHTML = answer;
-
-btn.onclick = ()=>checkAnswer(index);
-
-answersDiv.appendChild(btn);
-
-});
-
-updateUI();
-
-}
-
-function checkAnswer(index){
-
-clearInterval(interval);
-
-if(index===questions[currentQuestion].correct){
-
-xp+=100;
-
-correctSound.play();
-
-message.innerHTML =
-"✅ Mission Complete!";
-
-setTimeout(nextQuestion,1000);
-
-}
-else{
-
-wrongAnswer();
-
-}
-
-}
-
-function wrongAnswer(){
-
-clearInterval(interval);
-
-lives--;
-
-wrongSound.play();
-
-message.innerHTML =
-"❌ Wrong Answer";
-
-updateUI();
-
-if(lives<=0){
-
-setTimeout(()=>endGame(false),1000);
-
-}
-else{
-
-setTimeout(nextQuestion,1000);
-
-}
-
-}
-
-function nextQuestion(){
-
-message.innerHTML="";
-
-currentQuestion++;
-
-if(currentQuestion>=questions.length){
-
-endGame(true);
-return;
-
-}
-
-loadQuestion();
-
-}
-
-function updateUI(){
-
-livesDiv.innerHTML =
-"❤️".repeat(lives);
-
-xpDiv.innerHTML =
-"XP: " + xp;
-
-bar.style.width =
-(currentQuestion/questions.length*100)+"%";
-
-}
-
-function endGame(win){
-
-gameScreen.classList.add("hidden");
-endScreen.classList.remove("hidden");
-
-if(win){
-
-victorySound.play();
-
-endTitle.innerHTML =
-"🏆 YOU WON THE GAME!";
-
-}
-else{
-
-endTitle.innerHTML =
-"💀 GAME OVER";
-
-}
-
-finalScore.innerHTML =
-"Final XP: " + xp;
-
-}
-
+    const opciones = document.querySelectorAll('.opcion');
+    const resultado = document.getElementById('resultado');
+    let aciertos = 0;
+
+    opciones.forEach(opcion => {
+        opcion.addEventListener('click', () => {
+            // Evitar cambiar respuesta después de elegir
+            if(opcion.parentElement.classList.contains('respondida')) return;
+            opcion.parentElement.classList.add('respondida');
+
+            // Marcar correcta o incorrecta
+            if(opcion.dataset.correct === "true") {
+                opcion.classList.add('correcta');
+                aciertos++;
+            } else {
+                opcion.classList.add('incorrecta');
+                // Mostrar cuál era la correcta
+                opcion.parentElement.querySelector('.opcion[data-correct="true"]').classList.add('correcta');
+            }
+
+            // Mostrar puntuación final
+            const totalPreguntas = document.querySelectorAll('.pregunta').length;
+            const respondidas = document.querySelectorAll('.respondida').length;
+
+            if(respondidas === totalPreguntas) {
+                resultado.textContent = `¡Juego terminado! Tu puntuación: ${aciertos} de ${totalPreguntas}`;
+                resultado.style.backgroundColor = aciertos >= 7 ? '#d4edda' : '#fff3cd';
+                resultado.style.color = aciertos >= 7 ? '#155724' : '#856404';
+            }
+        });
+    });
 </script>
 
 </body>
