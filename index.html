@@ -7,7 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="juego-contenedor">
+    <!-- Pantalla de Inicio -->
+    <div class="pantalla-inicio" id="pantallaInicio">
+        <img src="imagenes/cover.png" alt="Portada del juego" class="portada">
+        <h1>EUROPE QUEST</h1>
+        <p>Descubre los lugares más emblemáticos de Europa</p>
+        <button class="boton-inicio" onclick="iniciarJuego()">Jugar Ahora</button>
+        <img src="imagenes/trophy.png" alt="Trofeo" class="trofeo">
+    </div>
+
+    <!-- Contenedor del Juego -->
+    <div class="juego-contenedor" id="juego" style="display: none;">
         <!-- Panel de información -->
         <div class="panel-info">
             <div class="puntos">Puntos: <span id="puntos">0</span></div>
@@ -16,15 +26,19 @@
 
         <!-- Mapa del juego -->
         <div class="mapa" id="mapa">
-            <img src="imagenes/mapa-fondo.jpg" alt="Mapa Europa" class="fondo-mapa">
+            <img src="imagenes/europe-map.jpg" alt="Mapa de Europa" class="fondo-mapa">
             
-            <!-- Puntos de ciudades -->
-            <div class="punto-ciudad" data-nivel="1" data-ciudad="París" style="top: 45%; left: 30%;">1</div>
-            <div class="punto-ciudad" data-nivel="2" data-ciudad="Londres" style="top: 35%; left: 25%;">2</div>
-            <div class="punto-ciudad" data-nivel="3" data-ciudad="Madrid" style="top: 65%; left: 28%;">3</div>
-            <div class="punto-ciudad" data-nivel="4" data-ciudad="Roma" style="top: 55%; left: 50%;">4</div>
-            <div class="punto-ciudad" data-nivel="5" data-ciudad="Berlín" style="top: 40%; left: 55%;">5</div>
-            <div class="punto-ciudad" data-nivel="6" data-ciudad="Lisboa" style="top: 70%; left: 20%;">6</div>
+            <!-- Puntos de niveles -->
+            <div class="punto-ciudad" data-nivel="1" style="top: 30%; left: 45%;">1</div>
+            <div class="punto-ciudad" data-nivel="2" style="top: 68%; left: 18%;">2</div>
+            <div class="punto-ciudad" data-nivel="3" style="top: 28%; left: 45%;">3</div>
+            <div class="punto-ciudad" data-nivel="4" style="top: 38%; left: 58%;">4</div>
+            <div class="punto-ciudad" data-nivel="5" style="top: 54%; left: 51%;">5</div>
+            <div class="punto-ciudad" data-nivel="6" style="top: 42%; left: 32%;">6</div>
+            <div class="punto-ciudad" data-nivel="7" style="top: 42%; left: 32%;">7</div>
+            <div class="punto-ciudad" data-nivel="8" style="top: 48%; left: 48%;">8</div>
+            <div class="punto-ciudad" data-nivel="9" style="top: 25%; left: 50%;">9</div>
+            <div class="punto-ciudad" data-nivel="10" style="top: 28%; left: 45%;">10</div>
 
             <!-- Personaje -->
             <div class="personaje" id="personaje"></div>
@@ -32,11 +46,16 @@
 
         <!-- Ventana de preguntas -->
         <div class="ventana-pregunta" id="ventanaPregunta">
-            <h3>¿En qué ciudad estás?</h3>
-            <p id="textoCiudad"></p>
+            <h3 id="tituloPregunta">Pregunta</h3>
+            <img id="imagenLugar" src="" alt="Imagen" class="imagen-lugar">
             <div class="opciones" id="opciones"></div>
             <button onclick="cerrarPregunta()">Cerrar</button>
         </div>
+
+        <!-- Sonidos -->
+        <audio id="sonidoCorrecto" src="sounds/correct.mp3" preload="auto">
+        <audio id="sonidoIncorrecto" src="sounds/wrong.mp3" preload="auto">
+        <audio id="sonidoVictoria" src="sounds/victory.mp3" preload="auto">
     </div>
 
     <script src="game.js"></script>
