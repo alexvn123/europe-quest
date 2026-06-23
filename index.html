@@ -1,360 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Europe Quest 🇪🇺</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europe Quest</title>
 
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+<link rel="stylesheet" href="style.css">
 
-        .contenedor {
-            max-width: 850px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            text-align: center;
-            color: #1e3c72;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .puntuacion {
-            text-align: center;
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #2a5298;
-            margin-bottom: 25px;
-            padding: 10px;
-            background: #f0f5ff;
-            border-radius: 12px;
-        }
-
-        .imagen {
-            width: 100%;
-            max-width: 450px;
-            display: block;
-            margin: 15px auto;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-        }
-
-        .imagen:hover {
-            transform: scale(1.02);
-        }
-
-        .pregunta {
-            margin: 30px 0;
-            padding: 25px;
-            border-radius: 15px;
-            background: #f8fbff;
-            border-left: 6px solid #3498db;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .pregunta h3 {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .opciones {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .opcion {
-            padding: 14px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 500;
-            cursor: pointer;
-            background: #e8f4fd;
-            border: 2px solid transparent;
-            transition: all 0.25s ease;
-        }
-
-        .opcion:hover {
-            background: #d0e9fb;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-
-        .correcta {
-            background: #d1fae5;
-            border-color: #10b981;
-            color: #065f46;
-            animation: acierto 0.5s ease;
-        }
-
-        .incorrecta {
-            background: #fee2e2;
-            border-color: #ef4444;
-            color: #991b1b;
-            animation: error 0.5s ease;
-        }
-
-        @keyframes acierto {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes error {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-            100% { transform: translateX(0); }
-        }
-
-        .mensaje {
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            height: 30px;
-        }
-
-        #resultado-final {
-            margin-top: 35px;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 1.4em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #78350f;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: none;
-        }
-
-        /* Para pantallas pequeñas */
-        @media (max-width: 600px) {
-            .opciones {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
 
-<div class="contenedor">
-    <h1>🌍 Europe Quest 🇪🇺</h1>
+<!-- START SCREEN -->
 
-    <div class="puntuacion">
-        Score: <span id="puntos">0</span> / 10
+<div id="startScreen" class="screen">
+
+    <div class="start-card">
+
+        <img src="images/cover.png" class="cover">
+
+        <h1>🌍 EUROPE QUEST</h1>
+
+        <p>
+            Explore Europe and become the Europe Master!
+        </p>
+
+        <input
+        type="text"
+        id="playerName"
+        placeholder="Enter your name">
+
+        <button onclick="startGame()">
+            START GAME
+        </button>
+
     </div>
 
-    <!-- QUESTION 1 -->
-    <div class="pregunta">
-        <h3>1. Where is Europe located?</h3>
-        <img src="imagenes/europe-map.jpg" alt="Map of Europe" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) Southern Hemisphere</div>
-            <div class="opcion" data-correct="true">B) Northern Hemisphere</div>
-            <div class="opcion" data-correct="false">C) Africa</div>
-            <div class="opcion" data-correct="false">D) Asia</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 2 -->
-    <div class="pregunta">
-        <h3>2. What ocean borders Europe to the west?</h3>
-        <img src="imagenes/atlantic-ocean.jpg" alt="Atlantic Ocean" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="true">A) Atlantic Ocean</div>
-            <div class="opcion" data-correct="false">B) Pacific Ocean</div>
-            <div class="opcion" data-correct="false">C) Indian Ocean</div>
-            <div class="opcion" data-correct="false">D) Southern Ocean</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 3 -->
-    <div class="pregunta">
-        <h3>3. How many stars are on the European Union flag?</h3>
-        <img src="imagenes/eu-flag.jpg" alt="EU Flag" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) 10</div>
-            <div class="opcion" data-correct="true">B) 12</div>
-            <div class="opcion" data-correct="false">C) 15</div>
-            <div class="opcion" data-correct="false">D) 20</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 4 -->
-    <div class="pregunta">
-        <h3>4. Which language is common in Europe?</h3>
-        <div class="opciones">
-            <div class="opcion" data-correct="true">A) German</div>
-            <div class="opcion" data-correct="false">B) Japanese</div>
-            <div class="opcion" data-correct="false">C) Hindi</div>
-            <div class="opcion" data-correct="false">D) Chinese</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 5 -->
-    <div class="pregunta">
-        <h3>5. Which country is famous for pizza and pasta?</h3>
-        <img src="imagenes/italy.jpg" alt="Italy" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) France</div>
-            <div class="opcion" data-correct="false">B) Germany</div>
-            <div class="opcion" data-correct="true">C) Italy</div>
-            <div class="opcion" data-correct="false">D) Spain</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 6 -->
-    <div class="pregunta">
-        <h3>6. Which civilization influenced European philosophy and politics?</h3>
-        <img src="imagenes/colosseum.jpg" alt="Roman Empire" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="true">A) Roman Empire</div>
-            <div class="opcion" data-correct="false">B) Maya</div>
-            <div class="opcion" data-correct="false">C) Inca</div>
-            <div class="opcion" data-correct="false">D) Aztec</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 7 -->
-    <div class="pregunta">
-        <h3>7. Where is the Eiffel Tower located?</h3>
-        <img src="imagenes/eiffel-tower.jpg" alt="Eiffel Tower" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) Italy</div>
-            <div class="opcion" data-correct="false">B) Spain</div>
-            <div class="opcion" data-correct="true">C) France</div>
-            <div class="opcion" data-correct="false">D) Germany</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 8 -->
-    <div class="pregunta">
-        <h3>8. Which mountain range is in Europe?</h3>
-        <img src="imagenes/alps.jpg" alt="Alps Mountains" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) Andes</div>
-            <div class="opcion" data-correct="true">B) Alps</div>
-            <div class="opcion" data-correct="false">C) Rockies</div>
-            <div class="opcion" data-correct="false">D) Himalayas</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 9 -->
-    <div class="pregunta">
-        <h3>9. Europe has more than...</h3>
-        <img src="imagenes/europe-countries.jpg" alt="European countries" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) 10 countries</div>
-            <div class="opcion" data-correct="false">B) 20 countries</div>
-            <div class="opcion" data-correct="true">C) 40 countries</div>
-            <div class="opcion" data-correct="false">D) 30 countries</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <!-- QUESTION 10 -->
-    <div class="pregunta">
-        <h3>10. What do the stars on the EU flag represent?</h3>
-        <img src="imagenes/european-union.jpg" alt="European Union" class="imagen">
-        <div class="opciones">
-            <div class="opcion" data-correct="false">A) War</div>
-            <div class="opcion" data-correct="false">B) Tourism</div>
-            <div class="opcion" data-correct="false">C) Money</div>
-            <div class="opcion" data-correct="true">D) Unity and Harmony</div>
-        </div>
-        <div class="mensaje"></div>
-    </div>
-
-    <div id="resultado-final"></div>
 </div>
 
-<script>
-    const opciones = document.querySelectorAll('.opcion');
-    const puntosMostrar = document.getElementById('puntos');
-    const resultadoFinal = document.getElementById('resultado-final');
-    let puntos = 0;
+<!-- MAP SCREEN -->
 
-    const mensajesCorrectos = [
-        "✅ Great job! 🎉",
-        "✅ Excellent! 👏",
-        "✅ Well done! 😎",
-        "✅ Correct! 🚀",
-        "✅ Perfect! 🌟"
-    ];
+<div id="mapScreen" class="hidden">
 
-    const mensajesIncorrectos = [
-        "❌ Not quite, try again!",
-        "❌ That's not right, keep going!",
-        "❌ Don't worry, you'll get it next time!",
-        "❌ Almost there! 😉"
-    ];
+    <div class="hud">
 
-    opciones.forEach(opcion => {
-        opcion.addEventListener('click', () => {
-            const pregunta = opcion.closest('.pregunta');
-            if (pregunta.classList.contains('ya-respondida')) return;
-            pregunta.classList.add('ya-respondida');
+        <div id="playerInfo">
+            Explorer
+        </div>
 
-            const mensaje = pregunta.querySelector('.mensaje');
+        <div id="lives">
+            ❤️❤️❤️
+        </div>
 
-            if (opcion.dataset.correct === "true") {
-                opcion.classList.add('correcta');
-                puntos++;
-                puntosMostrar.textContent = puntos;
-                mensaje.textContent = mensajesCorrectos[Math.floor(Math.random() * mensajesCorrectos.length)];
-            } else {
-                opcion.classList.add('incorrecta');
-                const correcta = pregunta.querySelector('.opcion[data-correct="true"]');
-                correcta.classList.add('correcta');
-                mensaje.textContent = mensajesIncorrectos[Math.floor(Math.random() * mensajesIncorrectos.length)];
-            }
+        <div id="xp">
+            XP: 0
+        </div>
 
-            // Show final result when finished
-            const totalPreguntas = document.querySelectorAll('.pregunta').length;
-            if (document.querySelectorAll('.ya-respondida').length === totalPreguntas) {
-                let texto = "";
-                if (puntos === 10) texto = "🏆 Perfect! You are a Europe expert! 🎉";
-                else if (puntos >= 7) texto = "🥈 Great work! You know a lot! 👏";
-                else if (puntos >= 5) texto = "👍 Good job! Keep learning!";
-                else texto = "🌱 Keep trying! You'll do better next time!";
+    </div>
 
-                resultadoFinal.textContent = `${texto}\nFinal Score: ${puntos} out of 10`;
-                resultadoFinal.style.display = "block";
-                resultadoFinal.style.animation = "acierto 0.8s ease";
-            }
-        });
-    });
-</script>
+    <div class="map-container">
+
+        <img
+        src="images/map.png"
+        class="map-image">
+
+        <div id="player"></div>
+
+        <!-- LEVELS -->
+
+        <button class="level" id="level1">1</button>
+        <button class="level locked" id="level2">2</button>
+        <button class="level locked" id="level3">3</button>
+        <button class="level locked" id="level4">4</button>
+        <button class="level locked" id="level5">5</button>
+        <button class="level locked" id="level6">6</button>
+        <button class="level locked" id="level7">7</button>
+        <button class="level locked" id="level8">8</button>
+        <button class="level locked" id="level9">9</button>
+        <button class="level locked" id="level10">10</button>
+
+    </div>
+
+</div>
+
+<!-- QUIZ SCREEN -->
+
+<div id="quizScreen" class="hidden">
+
+    <div class="quiz-box">
+
+        <div id="quizHeader">
+
+            <div id="timer">
+                ⏱️ 15
+            </div>
+
+            <div id="quizLives">
+                ❤️❤️❤️
+            </div>
+
+        </div>
+
+        <h2 id="question"></h2>
+
+        <div id="answers"></div>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<!-- WIN SCREEN -->
+
+<div id="winScreen" class="hidden">
+
+    <div class="end-card">
+
+        <img
+        src="images/trophy.png"
+        class="trophy">
+
+        <h1>
+            🏆 YOU WON THE GAME!
+        </h1>
+
+        <h2>
+            Congratulations Europe Master!
+        </h2>
+
+        <div id="finalXP"></div>
+
+        <button onclick="location.reload()">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+<!-- GAME OVER -->
+
+<div id="gameOverScreen" class="hidden">
+
+    <div class="end-card">
+
+        <h1>
+            💀 GAME OVER
+        </h1>
+
+        <h2>
+            You lost all your lives.
+        </h2>
+
+        <button onclick="location.reload()">
+            TRY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio
+id="correctSound"
+src="sounds/correct.mp3">
+</audio>
+
+<audio
+id="wrongSound"
+src="sounds/wrong.mp3">
+</audio>
+
+<audio
+id="victorySound"
+src="sounds/victory.mp3">
+</audio>
+
+<script src="game.js"></script>
 
 </body>
 </html>
