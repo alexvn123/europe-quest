@@ -1,44 +1,78 @@
 let puntos = 0;
 let vidas = 3;
-let lugarActual = null;
+let preguntaActual = null;
 
-// Base de datos con todos tus archivos
-const lugares = [
+// 📋 PREGUNTAS EXACTAS DEL DOCUMENTO
+const preguntas = [
     {
         nivel: 1,
-        nombre: "París",
-        imagen: "imagenes/eiffel-tower.jpg",
-        opciones: ["París", "Madrid", "Roma", "Berlín"]
+        enunciado: "Where is Europe located?",
+        imagen: "imagenes/europe-countries.jpg",
+        opciones: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Africa", "D) Asia"],
+        respuestaCorrecta: "B) Northern Hemisphere"
     },
     {
         nivel: 2,
-        nombre: "Roma",
-        imagen: "imagenes/colosseum.jpg",
-        opciones: ["Roma", "Londres", "Lisboa", "París"]
+        enunciado: "What ocean borders Europe to the west?",
+        imagen: "imagenes/atlantic-ocean.jpg",
+        opciones: ["A) Atlantic Ocean", "B) Pacific Ocean", "C) Indian Ocean", "D) Southern Ocean"],
+        respuestaCorrecta: "A) Atlantic Ocean"
     },
     {
         nivel: 3,
-        nombre: "Berlín",
-        imagen: "imagenes/berlin.jpg",
-        opciones: ["Berlín", "Madrid", "París", "Roma"]
+        enunciado: "How many stars are on the European Union flag?",
+        imagen: "imagenes/eu-flag.jpg",
+        opciones: ["A) 10", "B) 12", "C) 15", "D) 20"],
+        respuestaCorrecta: "B) 12"
     },
     {
         nivel: 4,
-        nombre: "Unión Europea",
-        imagen: "imagenes/eu-flag.jpg",
-        opciones: ["Unión Europea", "España", "Francia", "Italia"]
+        enunciado: "Which language is common in Europe?",
+        imagen: "imagenes/european-union.jpg",
+        opciones: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"],
+        respuestaCorrecta: "A) German"
     },
     {
         nivel: 5,
-        nombre: "Alpes",
-        imagen: "imagenes/alps.jpg",
-        opciones: ["Alpes", "Pirineos", "Apeninos", "Cárpatos"]
+        enunciado: "Which country is famous for pizza and pasta?",
+        imagen: "imagenes/italy.jpg",
+        opciones: ["A) France", "B) Germany", "C) Italy", "D) Spain"],
+        respuestaCorrecta: "C) Italy"
     },
     {
         nivel: 6,
-        nombre: "Océano Atlántico",
-        imagen: "imagenes/atlantic-ocean.jpg",
-        opciones: ["Océano Atlántico", "Mar Mediterráneo", "Mar del Norte", "Mar Báltico"]
+        enunciado: "Which civilization influenced European philosophy and politics?",
+        imagen: "imagenes/colosseum.jpg",
+        opciones: ["A) Roman Empire", "B) Maya", "C) Inca", "D) Aztec"],
+        respuestaCorrecta: "A) Roman Empire"
+    },
+    {
+        nivel: 7,
+        enunciado: "Where is the Eiffel Tower located?",
+        imagen: "imagenes/eiffel-tower.jpg",
+        opciones: ["A) Italy", "B) Spain", "C) France", "D) Germany"],
+        respuestaCorrecta: "C) France"
+    },
+    {
+        nivel: 8,
+        enunciado: "Which mountain range is in Europe?",
+        imagen: "imagenes/alps.jpg",
+        opciones: ["A) Andes", "B) Alps", "C) Rockies", "D) Himalayas"],
+        respuestaCorrecta: "B) Alps"
+    },
+    {
+        nivel: 9,
+        enunciado: "Europe has more than...",
+        imagen: "imagenes/europe-countries.jpg",
+        opciones: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 30 countries"],
+        respuestaCorrecta: "C) 40 countries"
+    },
+    {
+        nivel: 10,
+        enunciado: "What do the stars on the EU flag represent?",
+        imagen: "imagenes/eu-flag.jpg",
+        opciones: ["A) War", "B) Tourism", "C) Money", "D) Unity and Harmony"],
+        respuestaCorrecta: "D) Unity and Harmony"
     }
 ];
 
@@ -59,59 +93,65 @@ function actualizarInfo() {
 document.querySelectorAll('.punto-ciudad').forEach(punto => {
     punto.addEventListener('click', () => {
         const nivel = parseInt(punto.dataset.nivel);
-        const lugar = lugares.find(l => l.nivel === nivel);
-        lugarActual = lugar;
+        const pregunta = preguntas.find(p => p.nivel === nivel);
+        preguntaActual = pregunta;
 
+        // Mover personaje al punto seleccionado
         document.getElementById('personaje').style.top = punto.style.top;
         document.getElementById('personaje').style.left = punto.style.left;
 
-        mostrarPregunta(lugar);
+        mostrarPregunta(pregunta);
     });
 });
 
-// Mostrar ventana de pregunta
-function mostrarPregunta(lugar) {
-    document.getElementById('imagenLugar').src = lugar.imagen;
+// Mostrar ventana con la pregunta
+function mostrarPregunta(pregunta) {
+    document.getElementById('tituloPregunta').textContent = pregunta.enunciado;
+    document.getElementById('imagenLugar').src = pregunta.imagen;
+    
     const contenedorOpciones = document.getElementById('opciones');
     contenedorOpciones.innerHTML = '';
 
-    lugar.opciones.forEach(opcion => {
+    pregunta.opciones.forEach(opcion => {
         const boton = document.createElement('div');
         boton.className = 'opcion';
         boton.textContent = opcion;
-        boton.onclick = () => verificarRespuesta(opcion, lugar.nombre);
+        boton.onclick = () => verificarRespuesta(opcion, pregunta.respuestaCorrecta);
         contenedorOpciones.appendChild(boton);
     });
 
     document.getElementById('ventanaPregunta').style.display = 'block';
 }
 
-// Verificar respuesta
-function verificarRespuesta(respuesta, correcta) {
+// Verificar si la respuesta es correcta
+function verificarRespuesta(respuestaUsuario, respuestaCorrecta) {
     const sonidoCorrecto = document.getElementById('sonidoCorrecto');
     const sonidoIncorrecto = document.getElementById('sonidoIncorrecto');
     const sonidoVictoria = document.getElementById('sonidoVictoria');
 
-    if (respuesta === correcta) {
+    if (respuestaUsuario === respuestaCorrecta) {
         puntos += 10;
         sonidoCorrecto.play().catch(() => {});
-        alert(`✅ ¡Correcto! +10 puntos`);
+        alert(`✅ Correct! +10 points`);
     } else {
         vidas -= 1;
         sonidoIncorrecto.play().catch(() => {});
-        alert(`❌ Incorrecto. La respuesta es: ${correcta}`);
+        alert(`❌ Wrong! The correct answer is: ${respuestaCorrecta}`);
+        
         if (vidas <= 0) {
             sonidoVictoria.play().catch(() => {});
-            alert(`💀 Fin del juego! Puntuación final: ${puntos}`);
+            alert(`💀 Game Over! Final score: ${puntos} points`);
+            // Reiniciar juego
             puntos = 0;
             vidas = 3;
         }
     }
+
     actualizarInfo();
     cerrarPregunta();
 }
 
-// Cerrar ventana
+// Cerrar ventana de pregunta
 function cerrarPregunta() {
     document.getElementById('ventanaPregunta').style.display = 'none';
 }
