@@ -1,183 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Europe Quest</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Europe Quest</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- START SCREEN -->
-
-<div id="startScreen" class="screen">
-
-    <div class="start-card">
-
-        <img src="images/cover.png" class="cover">
-
-        <h1>🌍 EUROPE QUEST</h1>
-
-        <p>
-            Explore Europe and become the Europe Master!
-        </p>
-
-        <input
-        type="text"
-        id="playerName"
-        placeholder="Enter your name">
-
-        <button onclick="startGame()">
-            START GAME
-        </button>
-
-    </div>
-
-</div>
-
-<!-- MAP SCREEN -->
-
-<div id="mapScreen" class="hidden">
-
-    <div class="hud">
-
-        <div id="playerInfo">
-            Explorer
+    <div class="juego-contenedor">
+        <!-- Panel de información -->
+        <div class="panel-info">
+            <div class="puntos">Puntos: <span id="puntos">0</span></div>
+            <div class="vidas">Vidas: <span id="vidas">3</span></div>
         </div>
 
-        <div id="lives">
-            ❤️❤️❤️
+        <!-- Mapa del juego -->
+        <div class="mapa" id="mapa">
+            <img src="imagenes/mapa-fondo.jpg" alt="Mapa Europa" class="fondo-mapa">
+            
+            <!-- Puntos de ciudades -->
+            <div class="punto-ciudad" data-nivel="1" data-ciudad="París" style="top: 45%; left: 30%;">1</div>
+            <div class="punto-ciudad" data-nivel="2" data-ciudad="Londres" style="top: 35%; left: 25%;">2</div>
+            <div class="punto-ciudad" data-nivel="3" data-ciudad="Madrid" style="top: 65%; left: 28%;">3</div>
+            <div class="punto-ciudad" data-nivel="4" data-ciudad="Roma" style="top: 55%; left: 50%;">4</div>
+            <div class="punto-ciudad" data-nivel="5" data-ciudad="Berlín" style="top: 40%; left: 55%;">5</div>
+            <div class="punto-ciudad" data-nivel="6" data-ciudad="Lisboa" style="top: 70%; left: 20%;">6</div>
+
+            <!-- Personaje -->
+            <div class="personaje" id="personaje"></div>
         </div>
 
-        <div id="xp">
-            XP: 0
+        <!-- Ventana de preguntas -->
+        <div class="ventana-pregunta" id="ventanaPregunta">
+            <h3>¿En qué ciudad estás?</h3>
+            <p id="textoCiudad"></p>
+            <div class="opciones" id="opciones"></div>
+            <button onclick="cerrarPregunta()">Cerrar</button>
         </div>
-
     </div>
 
-    <div class="map-container">
-
-        <img
-        src="images/map.png"
-        class="map-image">
-
-        <div id="player"></div>
-
-        <!-- LEVELS -->
-
-        <button class="level" id="level1">1</button>
-        <button class="level locked" id="level2">2</button>
-        <button class="level locked" id="level3">3</button>
-        <button class="level locked" id="level4">4</button>
-        <button class="level locked" id="level5">5</button>
-        <button class="level locked" id="level6">6</button>
-        <button class="level locked" id="level7">7</button>
-        <button class="level locked" id="level8">8</button>
-        <button class="level locked" id="level9">9</button>
-        <button class="level locked" id="level10">10</button>
-
-    </div>
-
-</div>
-
-<!-- QUIZ SCREEN -->
-
-<div id="quizScreen" class="hidden">
-
-    <div class="quiz-box">
-
-        <div id="quizHeader">
-
-            <div id="timer">
-                ⏱️ 15
-            </div>
-
-            <div id="quizLives">
-                ❤️❤️❤️
-            </div>
-
-        </div>
-
-        <h2 id="question"></h2>
-
-        <div id="answers"></div>
-
-        <div id="message"></div>
-
-    </div>
-
-</div>
-
-<!-- WIN SCREEN -->
-
-<div id="winScreen" class="hidden">
-
-    <div class="end-card">
-
-        <img
-        src="images/trophy.png"
-        class="trophy">
-
-        <h1>
-            🏆 YOU WON THE GAME!
-        </h1>
-
-        <h2>
-            Congratulations Europe Master!
-        </h2>
-
-        <div id="finalXP"></div>
-
-        <button onclick="location.reload()">
-            PLAY AGAIN
-        </button>
-
-    </div>
-
-</div>
-
-<!-- GAME OVER -->
-
-<div id="gameOverScreen" class="hidden">
-
-    <div class="end-card">
-
-        <h1>
-            💀 GAME OVER
-        </h1>
-
-        <h2>
-            You lost all your lives.
-        </h2>
-
-        <button onclick="location.reload()">
-            TRY AGAIN
-        </button>
-
-    </div>
-
-</div>
-
-<!-- AUDIO -->
-
-<audio
-id="correctSound"
-src="sounds/correct.mp3">
-</audio>
-
-<audio
-id="wrongSound"
-src="sounds/wrong.mp3">
-</audio>
-
-<audio
-id="victorySound"
-src="sounds/victory.mp3">
-</audio>
-
-<script src="game.js"></script>
-
+    <script src="game.js"></script>
 </body>
 </html>
