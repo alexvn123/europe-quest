@@ -1,191 +1,204 @@
-let puntos = 0;
-let vidas = 3;
-let nivelActual = 1;
-
-// 📋 PREGUNTAS CON TUS IMÁGENES
-const preguntas = [
-    {
-        nivel: 1,
-        enunciado: "¿En qué hemisferio se encuentra Europa?",
-        imagen: "imagenes/europe-countries.jpg",
-        opciones: ["A) Sur", "B) Norte", "C) Este", "D) Oeste"],
-        correcta: "B) Norte"
-    },
-    {
-        nivel: 2,
-        enunciado: "¿Qué océano está al oeste de Europa?",
-        imagen: "imagenes/atlantic-ocean.jpg",
-        opciones: ["A) Pacífico", "B) Índico", "C) Atlántico", "D) Ártico"],
-        correcta: "C) Atlántico"
-    },
-    {
-        nivel: 3,
-        enunciado: "¿Cuántas estrellas tiene la bandera de la Unión Europea?",
-        imagen: "imagenes/eu-flag.jpg",
-        opciones: ["A) 10", "B) 12", "C) 15", "D) 20"],
-        correcta: "B) 12"
-    },
-    {
-        nivel: 4,
-        enunciado: "¿Cuál es una lengua muy hablada en Europa?",
-        imagen: "imagenes/european-union.jpg",
-        opciones: ["A) Alemán", "B) Japonés", "C) Hindi", "D) Chino"],
-        correcta: "A) Alemán"
-    },
-    {
-        nivel: 5,
-        enunciado: "¿Qué país es famoso por la pizza y la pasta?",
-        imagen: "imagenes/italy.jpg",
-        opciones: ["A) Francia", "B) Alemania", "C) Italia", "D) España"],
-        correcta: "C) Italia"
-    },
-    {
-        nivel: 6,
-        enunciado: "¿Qué civilización influyó mucho en la cultura europea?",
-        imagen: "imagenes/colosseum.jpg",
-        opciones: ["A) Romana", "B) Maya", "C) Inca", "D) Azteca"],
-        correcta: "A) Romana"
-    },
-    {
-        nivel: 7,
-        enunciado: "¿En qué país se encuentra la Torre Eiffel?",
-        imagen: "imagenes/eiffel-tower.jpg",
-        opciones: ["A) Italia", "B) España", "C) Francia", "D) Portugal"],
-        correcta: "C) Francia"
-    },
-    {
-        nivel: 8,
-        enunciado: "¿Qué cordillera montañosa está en Europa?",
-        imagen: "imagenes/alps.jpg",
-        opciones: ["A) Andes", "B) Alpes", "C) Rocosas", "D) Himalaya"],
-        correcta: "B) Alpes"
-    },
-    {
-        nivel: 9,
-        enunciado: "¿Cuál es la capital de Alemania?",
-        imagen: "imagenes/berlin.jpg",
-        opciones: ["A) París", "B) Roma", "C) Berlín", "D) Madrid"],
-        correcta: "C) Berlín"
-    },
-    {
-        nivel: 10,
-        enunciado: "¿Qué representan las estrellas de la bandera de la UE?",
-        imagen: "imagenes/eu-flag.jpg",
-        opciones: ["A) Guerra", "B) Turismo", "C) Dinero", "D) Unidad"],
-        correcta: "D) Unidad"
-    }
-];
-
-// Iniciar juego
-function iniciarJuego() {
-    document.getElementById('pantallaInicio').style.display = 'none';
-    document.getElementById('juego').style.display = 'block';
-    reiniciarProgreso();
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-// Reiniciar todo
-function reiniciarProgreso() {
-    puntos = 0;
-    vidas = 3;
-    nivelActual = 1;
-    actualizarInfo();
-    actualizarEstadosNiveles();
+body {
+    background: #0f172a;
+    min-height: 100vh;
+    color: white;
+    overflow: hidden;
 }
 
-// Volver al inicio
-function volverAlInicio() {
-    document.getElementById('juego').style.display = 'none';
-    document.getElementById('pantallaInicio').style.display = 'flex';
+/* ---------------- START SCREEN ---------------- */
+.start-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
 }
 
-// Actualizar marcadores
-function actualizarInfo() {
-    document.getElementById('puntos').textContent = puntos;
-    document.getElementById('vidas').textContent = vidas;
+.start-screen h1 {
+    font-size: 3rem;
+    color: #ffd700;
+    text-shadow: 0 0 15px rgba(255,215,0,0.6);
+    margin-bottom: 1.5rem;
 }
 
-// Desbloquear niveles
-function actualizarEstadosNiveles() {
-    document.querySelectorAll('.nivel').forEach(nivel => {
-        const num = parseInt(nivel.dataset.nivel);
-        if (num <= nivelActual) {
-            nivel.classList.remove('bloqueado');
-            nivel.classList.add('desbloqueado');
-        } else {
-            nivel.classList.remove('desbloqueado');
-            nivel.classList.add('bloqueado');
-        }
-    });
+.start-screen p {
+    font-size: 1.3rem;
+    color: #cbd5e1;
+    margin-bottom: 2.5rem;
 }
 
-// Mostrar pregunta con su imagen
-function mostrarPregunta(pregunta) {
-    document.getElementById('textoPregunta').textContent = pregunta.enunciado;
-    document.getElementById('imagenPregunta').src = pregunta.imagen;
-    const contenedor = document.getElementById('opciones');
-    contenedor.innerHTML = '';
-
-    pregunta.opciones.forEach(opcion => {
-        const div = document.createElement('div');
-        div.className = 'opcion';
-        div.textContent = opcion;
-        div.onclick = () => verificar(opcion, pregunta.correcta, pregunta.nivel);
-        contenedor.appendChild(div);
-    });
-
-    document.getElementById('ventanaPregunta').style.display = 'block';
+.play-button {
+    padding: 1.2rem 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
+    color: #0f172a;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(212,175,55,0.6);
+    transition: transform 0.2s;
 }
 
-// Verificar respuesta SIN mostrar la correcta
-function verificar(elegida, correcta, nivelPregunta) {
-    const sonidoBien = document.getElementById('sonidoCorrecto');
-    const sonidoMal = document.getElementById('sonidoIncorrecto');
-
-    if (elegida === correcta) {
-        puntos += 10;
-        sonidoBien.play().catch(() => {});
-        alert("✅ ¡Correcto!");
-
-        if (nivelPregunta === nivelActual && nivelActual < 10) {
-            nivelActual++;
-            actualizarEstadosNiveles();
-        }
-
-        if (nivelPregunta === 10) {
-            alert(`🎉 ¡Felicidades! Completaste todos los niveles. Puntos: ${puntos}`);
-            volverAlInicio();
-        }
-
-    } else {
-        vidas -= 1;
-        sonidoMal.play().catch(() => {});
-        alert("❌ ¡Incorrecto! Inténtalo de nuevo.");
-
-        if (vidas <= 0) {
-            alert(`💀 Se acabaron las vidas. Puntos: ${puntos}`);
-            volverAlInicio();
-        }
-    }
-
-    actualizarInfo();
-    cerrarPregunta();
+.play-button:hover {
+    transform: scale(1.05);
 }
 
-function cerrarPregunta() {
-    document.getElementById('ventanaPregunta').style.display = 'none';
+/* ---------------- GAME ---------------- */
+.game {
+    width: 100vw;
+    height: 100vh;
 }
 
-// Activar botones
-window.addEventListener('load', () => {
-    document.querySelectorAll('.nivel').forEach(nivel => {
-        nivel.addEventListener('click', () => {
-            const num = parseInt(nivel.dataset.nivel);
-            if (num === nivelActual) {
-                const pregunta = preguntas.find(p => p.nivel === num);
-                if (pregunta) mostrarPregunta(pregunta);
-            } else if (num > nivelActual) {
-                alert(`🔒 Nivel ${num} bloqueado. Completa el ${nivelActual} primero.`);
-            }
-        });
-    });
-});
+.top-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 26px;
+    font-weight: bold;
+    background: rgba(15, 23, 42, 0.85);
+    border-bottom: 2px solid #d4af37;
+    z-index: 10;
+    position: relative;
+}
+
+.points { color: #ffd700; }
+.lives { color: #ef4444; }
+
+.map-container {
+    width: 100%;
+    height: calc(100vh - 70px);
+    position: relative;
+    overflow: hidden;
+}
+
+.background-map {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.95;
+}
+
+.path {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Level Style */
+.level {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    z-index: 5;
+    border: 3px solid #d4af37;
+}
+
+.level.locked {
+    background: rgba(71, 85, 105, 0.85);
+    color: #94a3b8;
+    cursor: not-allowed;
+    border-color: #64748b;
+}
+
+.level.unlocked {
+    background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
+    color: #0f172a;
+    box-shadow: 0 0 18px #d4af37, 0 0 30px rgba(212,175,55,0.6);
+    cursor: pointer;
+}
+
+.level.unlocked:active {
+    transform: scale(0.92);
+}
+
+/* ---------------- QUESTION MODAL ---------------- */
+.question-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    max-width: 450px;
+    padding: 25px;
+    background: #ffffff;
+    color: #0f172a;
+    border-radius: 14px;
+    box-shadow: 0 0 35px rgba(0,0,0,0.8);
+    display: none;
+    z-index: 20;
+    text-align: center;
+    border: 3px solid #d4af37;
+}
+
+.question-modal h3 {
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
+.question-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #cbd5e1;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.option {
+    padding: 12px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+    border-color: #d4af37;
+    background: #fef3c7;
+}
+
+button {
+    padding: 10px 20px;
+    background: #0f172a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    border: 1px solid #d4af37;
+}
