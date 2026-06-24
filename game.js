@@ -1,5 +1,6 @@
 let puntos = 0;
 let vidas = 3;
+let nivelActual = 1; // Solo se puede jugar este nivel hasta acertar
 
 // 📋 LAS 10 PREGUNTAS COMPLETAS
 const preguntas = [
@@ -80,6 +81,7 @@ function iniciarJuego() {
     document.getElementById('pantallaInicio').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
     actualizarInfo();
+    actualizarEstadosNiveles(); // Desbloquea solo el nivel 1 al empezar
 }
 
 // Actualizar marcadores
@@ -88,7 +90,21 @@ function actualizarInfo() {
     document.getElementById('vidas').textContent = vidas;
 }
 
-// Mostrar pregunta
+// Cambia los niveles: desbloquea solo hasta el nivel actual
+function actualizarEstadosNiveles() {
+    document.querySelectorAll('.punto-nivel').forEach(boton => {
+        const nivel = parseInt(boton.dataset.nivel);
+        if (nivel <= nivelActual) {
+            boton.classList.remove('bloqueado');
+            boton.classList.add('desbloqueado');
+        } else {
+            boton.classList.remove('desbloqueado');
+            boton.classList.add('bloqueado');
+        }
+    });
+}
+
+// Mostrar pregunta solo si el nivel está desbloqueado
 function mostrarPregunta(pregunta) {
     document.getElementById('textoPregunta').textContent = pregunta.enunciado;
     document.getElementById('imagenPregunta').src = pregunta.imagen;
@@ -99,15 +115,15 @@ function mostrarPregunta(pregunta) {
         const div = document.createElement('div');
         div.className = 'opcion';
         div.textContent = opcion;
-        div.onclick = () => verificar(opcion, pregunta.correcta);
+        div.onclick = () => verificar(opcion, pregunta.correcta, pregunta.nivel);
         contenedor.appendChild(div);
     });
 
     document.getElementById('ventanaPregunta').style.display = 'block';
 }
 
-// Verificar respuesta
-function verificar(elegida, correcta) {
+// Verificar respuesta: solo avanza si acierta
+function verificar(elegida, correcta, nivelPregunta) {
     const sonidoBien = document.getElementById('sonidoCorrecto');
     const sonidoMal = document.getElementById('sonidoIncorrecto');
     const sonidoFin = document.getElementById('sonidoVictoria');
@@ -116,15 +132,33 @@ function verificar(elegida, correcta) {
         puntos += 10;
         sonidoBien.play().catch(() => {});
         alert(`✅ Correct! +10 points`);
+
+        // Si acierta, desbloquea el siguiente nivel
+        if (nivelPregunta === nivelActual && nivelActual < 10) {
+            nivelActual++;
+            actualizarEstadosNiveles();
+        }
+
+        // Si terminó todos los niveles
+        if (nivelPregunta === 10) {
+            sonidoFin.play().catch(() => {});
+            alert(`🎉 CONGRATULATIONS! You finished all levels! Final score: ${puntos} points`);
+        }
+
     } else {
         vidas -= 1;
         sonidoMal.play().catch(() => {});
         alert(`❌ Wrong! Correct answer: ${correcta}`);
+
         if (vidas <= 0) {
             sonidoFin.play().catch(() => {});
             alert(`💀 Game Over! Final score: ${puntos} points`);
+            // Reiniciar progreso
             puntos = 0;
             vidas = 3;
+            nivelActual = 1;
+            actualizarInfo();
+            actualizarEstadosNiveles();
         }
     }
 
@@ -142,8 +176,12 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.punto-nivel').forEach(boton => {
         boton.addEventListener('click', () => {
             const nivel = parseInt(boton.dataset.nivel);
-            const pregunta = preguntas.find(p => p.nivel === nivel);
-            if (pregunta) mostrarPregunta(pregunta);
+            if (nivel === nivelActual) { // Solo deja jugar el nivel actual
+                const pregunta = preguntas.find(p => p.nivel === nivel);
+                if (pregunta) mostrarPregunta(pregunta);
+            } else if (nivel > nivelActual) {
+                alert(`🔒 Level ${nivel} is locked! Complete level ${nivelActual} first.`);
+            }
         });
     });
 });
