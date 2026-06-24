@@ -12,8 +12,8 @@ body {
     overflow: hidden;
 }
 
-/* ---------------- PANTALLA DE INICIO ---------------- */
-.pantalla-inicio {
+/* ---------------- START SCREEN ---------------- */
+.start-screen {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -25,20 +25,20 @@ body {
     background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
 }
 
-.pantalla-inicio h1 {
+.start-screen h1 {
     font-size: 3rem;
     color: #ffd700;
     text-shadow: 0 0 15px rgba(255,215,0,0.6);
     margin-bottom: 1.5rem;
 }
 
-.pantalla-inicio p {
+.start-screen p {
     font-size: 1.3rem;
     color: #cbd5e1;
     margin-bottom: 2.5rem;
 }
 
-.boton-jugar {
+.play-button {
     padding: 1.2rem 3rem;
     font-size: 1.5rem;
     font-weight: bold;
@@ -51,17 +51,17 @@ body {
     transition: transform 0.2s;
 }
 
-.boton-jugar:hover {
+.play-button:hover {
     transform: scale(1.05);
 }
 
-/* ---------------- JUEGO ---------------- */
-.juego {
+/* ---------------- GAME ---------------- */
+.game {
     width: 100vw;
     height: 100vh;
 }
 
-.panel-superior {
+.top-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,24 +74,24 @@ body {
     position: relative;
 }
 
-.puntos { color: #ffd700; }
-.vidas { color: #ef4444; }
+.points { color: #ffd700; }
+.lives { color: #ef4444; }
 
-.mapa-contenedor {
+.map-container {
     width: 100%;
     height: calc(100vh - 70px);
     position: relative;
     overflow: hidden;
 }
 
-.fondo-mapa {
+.background-map {
     width: 100%;
     height: 100%;
     object-fit: cover;
     opacity: 0.95;
 }
 
-.camino {
+.path {
     position: absolute;
     top: 0;
     left: 0;
@@ -101,8 +101,8 @@ body {
     pointer-events: none;
 }
 
-/* Estilo de los niveles */
-.nivel {
+/* Level Style */
+.level {
     position: absolute;
     width: 70px;
     height: 70px;
@@ -117,26 +117,26 @@ body {
     border: 3px solid #d4af37;
 }
 
-.nivel.bloqueado {
+.level.locked {
     background: rgba(71, 85, 105, 0.85);
     color: #94a3b8;
     cursor: not-allowed;
     border-color: #64748b;
 }
 
-.nivel.desbloqueado {
+.level.unlocked {
     background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
     color: #0f172a;
     box-shadow: 0 0 18px #d4af37, 0 0 30px rgba(212,175,55,0.6);
     cursor: pointer;
 }
 
-.nivel.desbloqueado:active {
+.level.unlocked:active {
     transform: scale(0.92);
 }
 
-/* ---------------- VENTANA DE PREGUNTAS ---------------- */
-.ventana-pregunta {
+/* ---------------- QUESTION MODAL ---------------- */
+.question-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -154,13 +154,13 @@ body {
     border: 3px solid #d4af37;
 }
 
-.ventana-pregunta h3 {
+.question-modal h3 {
     margin-bottom: 20px;
     font-size: 1.25rem;
     line-height: 1.5;
 }
 
-.imagen-pregunta {
+.question-image {
     width: 100%;
     height: 180px;
     object-fit: cover;
@@ -169,14 +169,14 @@ body {
     border: 2px solid #cbd5e1;
 }
 
-.opciones {
+.options {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin: 20px 0;
 }
 
-.opcion {
+.option {
     padding: 12px;
     border: 2px solid #cbd5e1;
     border-radius: 8px;
@@ -186,7 +186,7 @@ body {
     transition: all 0.2s ease;
 }
 
-.opcion:hover {
+.option:hover {
     border-color: #d4af37;
     background: #fef3c7;
 }
