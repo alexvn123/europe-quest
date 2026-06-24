@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,35 +7,60 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Panel superior -->
-    <div class="header">
-        <div class="puntos">Puntos: <span id="puntos">0</span></div>
-        <div class="vidas">Vidas: <span id="vidas">3</span></div>
+    <!-- PANTALLA DE INICIO -->
+    <div id="pantallaInicio" class="pantalla-inicio">
+        <img src="imagenes/cover.png" alt="Portada" class="portada">
+        <h1>EUROPE QUEST</h1>
+        <p>Answer the questions and explore Europe!</p>
+        <button onclick="iniciarJuego()" class="boton-jugar">PLAY GAME</button>
+        <img src="imagenes/trophy.png" alt="Trofeo" class="trofeo">
     </div>
 
-    <!-- Área del mapa -->
-    <div class="mapa">
-        <!-- Puntos de niveles en las posiciones exactas de tu captura -->
-        <div class="punto" data-nivel="1" style="top: 22%; left: 45%;">1</div>
-        <div class="punto" data-nivel="2" style="top: 30%; left: 32%;">2</div>
-        <div class="punto" data-nivel="3" style="top: 72%; left: 35%;">3</div>
-        <div class="punto" data-nivel="4" style="top: 60%; left: 60%;">4</div>
-        <div class="punto" data-nivel="5" style="top: 42%; left: 65%;">5</div>
-        <div class="punto" data-nivel="6" style="top: 78%; left: 25%;">6</div>
-    </div>
+    <!-- JUEGO PRINCIPAL -->
+    <div id="juego" class="juego" style="display: none;">
+        <!-- Panel superior -->
+        <div class="panel-superior">
+            <div class="puntos">Points: <span id="puntos">0</span></div>
+            <div class="vidas">Lives: <span id="vidas">3</span></div>
+        </div>
 
-    <!-- Ventana de preguntas -->
-    <div id="ventana" class="ventana">
-        <h3 id="pregunta-texto"></h3>
-        <img id="imagen" src="" alt="Imagen" class="imagen">
-        <div id="opciones" class="opciones"></div>
-        <button onclick="cerrarVentana()">Cerrar</button>
-    </div>
+        <!-- Mapa con camino y puntos -->
+        <div class="mapa-contenedor">
+            <!-- Fondo del mapa -->
+            <img src="imagenes/europe-map.jpg" alt="Mapa Europa" class="fondo-mapa">
+            
+            <!-- Camino conectando los puntos -->
+            <svg class="camino" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M 40 20 L 30 35 L 35 70 L 60 55 L 65 30 L 25 75 L 40 20 L 45 45 L 50 25 L 50 15" 
+                      fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="5 3" />
+            </svg>
 
-    <!-- Sonidos -->
-    <audio id="sonido-correcto" src="sounds/correct.mp3" preload="auto">
-    <audio id="sonido-incorrecto" src="sounds/wrong.mp3" preload="auto">
-    <audio id="sonido-fin" src="sounds/victory.mp3" preload="auto">
+            <!-- Puntos en ORDEN del 1 al 10 -->
+            <div class="punto-nivel" data-nivel="1" style="top: 20%; left: 40%;">1</div>
+            <div class="punto-nivel" data-nivel="2" style="top: 35%; left: 30%;">2</div>
+            <div class="punto-nivel" data-nivel="3" style="top: 70%; left: 35%;">3</div>
+            <div class="punto-nivel" data-nivel="4" style="top: 55%; left: 60%;">4</div>
+            <div class="punto-nivel" data-nivel="5" style="top: 30%; left: 65%;">5</div>
+            <div class="punto-nivel" data-nivel="6" style="top: 75%; left: 25%;">6</div>
+            <div class="punto-nivel" data-nivel="7" style="top: 20%; left: 40%;">7</div>
+            <div class="punto-nivel" data-nivel="8" style="top: 45%; left: 45%;">8</div>
+            <div class="punto-nivel" data-nivel="9" style="top: 25%; left: 50%;">9</div>
+            <div class="punto-nivel" data-nivel="10" style="top: 15%; left: 50%;">10</div>
+        </div>
+
+        <!-- Ventana de preguntas -->
+        <div id="ventanaPregunta" class="ventana-pregunta">
+            <h3 id="textoPregunta"></h3>
+            <img id="imagenPregunta" src="" alt="Imagen" class="imagen-pregunta">
+            <div id="opciones" class="opciones"></div>
+            <button onclick="cerrarPregunta()">Close</button>
+        </div>
+
+        <!-- Sonidos -->
+        <audio id="sonidoCorrecto" src="sounds/correct.mp3" preload="auto">
+        <audio id="sonidoIncorrecto" src="sounds/wrong.mp3" preload="auto">
+        <audio id="sonidoVictoria" src="sounds/victory.mp3" preload="auto">
+    </div>
 
     <script src="game.js"></script>
 </body>
