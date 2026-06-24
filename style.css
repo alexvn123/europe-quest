@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #0a1526;
+    background: #1a1a2e;
     min-height: 100vh;
     color: white;
     overflow: hidden;
@@ -16,7 +16,7 @@ body {
 .pantalla-inicio {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(160deg, #0a1526 0%, #102040 100%);
+    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,56 +25,35 @@ body {
     padding: 2rem;
 }
 
-.pantalla-inicio .portada {
-    width: 180px;
-    height: auto;
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(255,215,0,0.5);
-}
-
 .pantalla-inicio h1 {
-    font-size: 2.8rem;
-    color: #ffd700;
-    text-shadow: 0 0 15px #ffd700;
-    margin-bottom: 1rem;
+    font-size: 3rem;
+    color: #d4af37;
+    text-shadow: 0 0 15px rgba(212,175,55,0.6);
+    margin-bottom: 1.5rem;
 }
 
 .pantalla-inicio p {
-    font-size: 1.3rem;
-    color: #d0d8e8;
-    margin-bottom: 2.5rem;
+    font-size: 1.4rem;
+    color: #cbd5e1;
+    margin-bottom: 3rem;
 }
 
 .boton-jugar {
-    padding: 1rem 3rem;
-    font-size: 1.5rem;
+    padding: 1.2rem 3.5rem;
+    font-size: 1.6rem;
     font-weight: bold;
-    background: #ffd700;
-    color: #0a1526;
+    background: linear-gradient(180deg, #f5d76e 0%, #d4af37 100%);
+    color: #1a1a2e;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(255,215,0,0.6);
-    transition: all 0.2s;
+    box-shadow: 0 0 20px rgba(212,175,55,0.6);
+    transition: all 0.2s ease;
 }
 
 .boton-jugar:hover {
     transform: scale(1.08);
-    background: #fff350;
-}
-
-.trofeo {
-    position: absolute;
-    bottom: 3rem;
-    right: 3rem;
-    width: 70px;
-    animation: flotar 3s ease-in-out infinite alternate;
-}
-
-@keyframes flotar {
-    from { transform: translateY(0); }
-    to { transform: translateY(-10px); }
+    box-shadow: 0 0 25px rgba(212,175,55,0.8);
 }
 
 /* ---------------- JUEGO ---------------- */
@@ -87,30 +66,29 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
-    font-size: 28px;
+    padding: 15px 25px;
+    font-size: 26px;
     font-weight: bold;
+    background: rgba(15, 23, 42, 0.85);
+    border-bottom: 2px solid #d4af37;
     z-index: 10;
     position: relative;
-    background: rgba(10, 21, 38, 0.7);
 }
 
-.puntos { color: #ffffff; }
-.vidas { color: #ff4466; }
+.puntos { color: #fcd34d; }
+.vidas { color: #ef4444; }
 
 .mapa-contenedor {
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 72px);
     position: relative;
     overflow: hidden;
-    background: #0a1526;
 }
 
 .fondo-mapa {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.85;
 }
 
 .camino {
@@ -121,14 +99,13 @@ body {
     height: 100%;
     z-index: 2;
     pointer-events: none;
-    filter: drop-shadow(0 0 6px rgba(255,215,0,0.7));
 }
 
-/* Estilo de los puntos: bloqueados y desbloqueados */
-.punto-nivel {
+/* Estilo de los niveles: igual al diseño de medalla dorada */
+.nivel {
     position: absolute;
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     font-size: 26px;
     font-weight: bold;
@@ -137,27 +114,27 @@ body {
     align-items: center;
     transition: all 0.2s ease;
     z-index: 5;
-    border: 3px solid #ffd700;
+    border: 3px solid #d4af37;
+    box-shadow: 0 0 12px rgba(0,0,0,0.5);
 }
 
-/* Bloqueado: gris, no se puede tocar */
-.punto-nivel.bloqueado {
-    background: #444;
-    color: #888;
-    box-shadow: none;
+/* Bloqueado: apagado */
+.nivel.bloqueado {
+    background: #475569;
+    color: #94a3b8;
     cursor: not-allowed;
-    border-color: #666;
+    border-color: #64748b;
 }
 
-/* Desbloqueado: dorado brillante */
-.punto-nivel.desbloqueado {
-    background: #ffd700;
-    color: #0a1526;
-    box-shadow: 0 0 18px #ffd700, 0 0 30px rgba(255,215,0,0.6);
+/* Desbloqueado: brillante */
+.nivel.desbloqueado {
+    background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
+    color: #1a1a2e;
     cursor: pointer;
+    box-shadow: 0 0 18px #d4af37, 0 0 30px rgba(212,175,55,0.6);
 }
 
-.punto-nivel.desbloqueado:active {
+.nivel.desbloqueado:active {
     transform: scale(0.92);
 }
 
@@ -171,17 +148,18 @@ body {
     max-width: 480px;
     padding: 25px;
     background: #ffffff;
-    color: #222;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    color: #1e293b;
+    border-radius: 14px;
+    box-shadow: 0 0 35px rgba(0,0,0,0.8);
     display: none;
     z-index: 20;
     text-align: center;
+    border: 3px solid #d4af37;
 }
 
 .ventana-pregunta h3 {
     margin-bottom: 20px;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     line-height: 1.5;
 }
 
@@ -189,9 +167,9 @@ body {
     width: 100%;
     height: 170px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 20px;
-    border: 2px solid #eee;
+    border: 2px solid #e2e8f0;
 }
 
 .opciones {
@@ -203,26 +181,27 @@ body {
 
 .opcion {
     padding: 12px;
-    border: 2px solid #ddd;
+    border: 2px solid #cbd5e1;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     text-align: left;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .opcion:hover {
-    border-color: #102040;
-    background: #f0f4f8;
+    border-color: #d4af37;
+    background: #fef3c7;
 }
 
 button {
     padding: 10px 20px;
-    background: #102040;
+    background: #1e293b;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     margin-top: 10px;
+    border: 1px solid #d4af37;
 }
