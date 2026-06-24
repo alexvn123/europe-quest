@@ -1,52 +1,86 @@
-// Variables del juego
 let puntos = 0;
 let vidas = 3;
 
-// 📋 PREGUNTAS EXACTAS
+// 📋 LAS 10 PREGUNTAS COMPLETAS
 const preguntas = [
     {
         nivel: 1,
         enunciado: "Where is Europe located?",
         imagen: "imagenes/europe-countries.jpg",
         opciones: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Africa", "D) Asia"],
-        respuestaCorrecta: "B) Northern Hemisphere"
+        correcta: "B) Northern Hemisphere"
     },
     {
         nivel: 2,
         enunciado: "What ocean borders Europe to the west?",
         imagen: "imagenes/atlantic-ocean.jpg",
         opciones: ["A) Atlantic Ocean", "B) Pacific Ocean", "C) Indian Ocean", "D) Southern Ocean"],
-        respuestaCorrecta: "A) Atlantic Ocean"
+        correcta: "A) Atlantic Ocean"
     },
     {
         nivel: 3,
         enunciado: "How many stars are on the European Union flag?",
         imagen: "imagenes/eu-flag.jpg",
         opciones: ["A) 10", "B) 12", "C) 15", "D) 20"],
-        respuestaCorrecta: "B) 12"
+        correcta: "B) 12"
     },
     {
         nivel: 4,
         enunciado: "Which language is common in Europe?",
         imagen: "imagenes/european-union.jpg",
         opciones: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"],
-        respuestaCorrecta: "A) German"
+        correcta: "A) German"
     },
     {
         nivel: 5,
         enunciado: "Which country is famous for pizza and pasta?",
         imagen: "imagenes/italy.jpg",
         opciones: ["A) France", "B) Germany", "C) Italy", "D) Spain"],
-        respuestaCorrecta: "C) Italy"
+        correcta: "C) Italy"
     },
     {
         nivel: 6,
+        enunciado: "Which civilization influenced European philosophy and politics?",
+        imagen: "imagenes/colosseum.jpg",
+        opciones: ["A) Roman Empire", "B) Maya", "C) Inca", "D) Aztec"],
+        correcta: "A) Roman Empire"
+    },
+    {
+        nivel: 7,
         enunciado: "Where is the Eiffel Tower located?",
         imagen: "imagenes/eiffel-tower.jpg",
         opciones: ["A) Italy", "B) Spain", "C) France", "D) Germany"],
-        respuestaCorrecta: "C) France"
+        correcta: "C) France"
+    },
+    {
+        nivel: 8,
+        enunciado: "Which mountain range is in Europe?",
+        imagen: "imagenes/alps.jpg",
+        opciones: ["A) Andes", "B) Alps", "C) Rockies", "D) Himalayas"],
+        correcta: "B) Alps"
+    },
+    {
+        nivel: 9,
+        enunciado: "Europe has more than...",
+        imagen: "imagenes/europe-countries.jpg",
+        opciones: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 30 countries"],
+        correcta: "C) 40 countries"
+    },
+    {
+        nivel: 10,
+        enunciado: "What do the stars on the EU flag represent?",
+        imagen: "imagenes/eu-flag.jpg",
+        opciones: ["A) War", "B) Tourism", "C) Money", "D) Unity and Harmony"],
+        correcta: "D) Unity and Harmony"
     }
 ];
+
+// Iniciar juego
+function iniciarJuego() {
+    document.getElementById('pantallaInicio').style.display = 'none';
+    document.getElementById('juego').style.display = 'block';
+    actualizarInfo();
+}
 
 // Actualizar marcadores
 function actualizarInfo() {
@@ -54,11 +88,10 @@ function actualizarInfo() {
     document.getElementById('vidas').textContent = vidas;
 }
 
-// Mostrar ventana con la pregunta
+// Mostrar pregunta
 function mostrarPregunta(pregunta) {
-    document.getElementById('pregunta-texto').textContent = pregunta.enunciado;
-    document.getElementById('imagen').src = pregunta.imagen;
-
+    document.getElementById('textoPregunta').textContent = pregunta.enunciado;
+    document.getElementById('imagenPregunta').src = pregunta.imagen;
     const contenedor = document.getElementById('opciones');
     contenedor.innerHTML = '';
 
@@ -66,18 +99,18 @@ function mostrarPregunta(pregunta) {
         const div = document.createElement('div');
         div.className = 'opcion';
         div.textContent = opcion;
-        div.onclick = () => verificarRespuesta(opcion, pregunta.respuestaCorrecta);
+        div.onclick = () => verificar(opcion, pregunta.correcta);
         contenedor.appendChild(div);
     });
 
-    document.getElementById('ventana').style.display = 'block';
+    document.getElementById('ventanaPregunta').style.display = 'block';
 }
 
 // Verificar respuesta
-function verificarRespuesta(elegida, correcta) {
-    const sonidoBien = document.getElementById('sonido-correcto');
-    const sonidoMal = document.getElementById('sonido-incorrecto');
-    const sonidoFin = document.getElementById('sonido-fin');
+function verificar(elegida, correcta) {
+    const sonidoBien = document.getElementById('sonidoCorrecto');
+    const sonidoMal = document.getElementById('sonidoIncorrecto');
+    const sonidoFin = document.getElementById('sonidoVictoria');
 
     if (elegida === correcta) {
         puntos += 10;
@@ -87,29 +120,26 @@ function verificarRespuesta(elegida, correcta) {
         vidas -= 1;
         sonidoMal.play().catch(() => {});
         alert(`❌ Wrong! Correct answer: ${correcta}`);
-
         if (vidas <= 0) {
             sonidoFin.play().catch(() => {});
-            alert(`💀 Game Over! Score: ${puntos}`);
+            alert(`💀 Game Over! Final score: ${puntos} points`);
             puntos = 0;
             vidas = 3;
         }
     }
 
     actualizarInfo();
-    cerrarVentana();
+    cerrarPregunta();
 }
 
 // Cerrar ventana
-function cerrarVentana() {
-    document.getElementById('ventana').style.display = 'none';
+function cerrarPregunta() {
+    document.getElementById('ventanaPregunta').style.display = 'none';
 }
 
-// Iniciar el juego y activar los botones
+// Activar botones al cargar
 window.addEventListener('load', () => {
-    actualizarInfo();
-
-    document.querySelectorAll('.punto').forEach(boton => {
+    document.querySelectorAll('.punto-nivel').forEach(boton => {
         boton.addEventListener('click', () => {
             const nivel = parseInt(boton.dataset.nivel);
             const pregunta = preguntas.find(p => p.nivel === nivel);
