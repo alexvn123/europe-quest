@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aventura Legendaria - Europe Quest</title>
+    <title>Europe Quest</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- PANTALLA DE INICIO -->
     <div id="pantallaInicio" class="pantalla-inicio">
-        <h1>AVENTURA LEGENDARIA</h1>
-        <p>Responde correctamente para avanzar en tu camino</p>
+        <h1>EUROPE QUEST</h1>
+        <p>Responde bien para avanzar en tu aventura</p>
         <button onclick="iniciarJuego()" class="boton-jugar">COMENZAR AVENTURA</button>
     </div>
 
@@ -22,42 +22,44 @@
             <div class="vidas">❤️ Vidas: <span id="vidas">3</span></div>
         </div>
 
-        <!-- MAPA CON CAMINO EN ESPIRAL/SERPIENTE -->
+        <!-- MAPA CON LA IMAGEN DE FONDO Y RECORRIDO -->
         <div class="mapa-contenedor">
-            <!-- Fondo temático -->
+            <!-- Imagen de fondo -->
             <img src="imagenes/mapa-aventura.jpg" alt="Mapa de Aventura" class="fondo-mapa">
 
-            <!-- Camino dorado conectando los niveles -->
+            <!-- Camino dorado siguiendo tu recorrido -->
             <svg class="camino" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M 15 15 C 30 20, 50 25, 70 30 C 80 35, 85 45, 75 55 C 60 60, 40 65, 25 70 C 20 75, 25 85, 40 90 C 55 92, 75 90, 85 80 C 90 70, 85 55, 70 45" 
-                      fill="none" stroke="#d4af37" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(212,175,55,0.7))" />
+                <path d="M 22 18 L 68 18 L 68 32 L 22 32 L 22 46 L 68 46 L 68 60 L 22 60 L 22 74 L 68 74" 
+                      fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
             </svg>
 
-            <!-- NIVELES EN ORDEN 1 → 2 → 3 → ... → 10 -->
-            <div class="nivel bloqueado" data-nivel="1" style="top: 15%; left: 15%;">1</div>
-            <div class="nivel bloqueado" data-nivel="2" style="top: 30%; left: 70%;">2</div>
-            <div class="nivel bloqueado" data-nivel="3" style="top: 55%; left: 75%;">3</div>
-            <div class="nivel bloqueado" data-nivel="4" style="top: 60%; left: 40%;">4</div>
-            <div class="nivel bloqueado" data-nivel="5" style="top: 70%; left: 25%;">5</div>
-            <div class="nivel bloqueado" data-nivel="6" style="top: 80%; left: 30%;">6</div>
-            <div class="nivel bloqueado" data-nivel="7" style="top: 90%; left: 40%;">7</div>
-            <div class="nivel bloqueado" data-nivel="8" style="top: 88%; left: 75%;">8</div>
-            <div class="nivel bloqueado" data-nivel="9" style="top: 75%; left: 85%;">9</div>
-            <div class="nivel bloqueado" data-nivel="10" style="top: 45%; left: 70%;">10</div>
+            <!-- Niveles en orden exacto -->
+            <div class="nivel bloqueado" data-nivel="1" style="top: 18%; left: 22%;">1</div>
+            <div class="nivel bloqueado" data-nivel="2" style="top: 18%; left: 68%;">2</div>
+            <div class="nivel bloqueado" data-nivel="3" style="top: 32%; left: 68%;">3</div>
+            <div class="nivel bloqueado" data-nivel="4" style="top: 32%; left: 22%;">4</div>
+            <div class="nivel bloqueado" data-nivel="5" style="top: 46%; left: 22%;">5</div>
+            <div class="nivel bloqueado" data-nivel="6" style="top: 46%; left: 68%;">6</div>
+            <div class="nivel bloqueado" data-nivel="7" style="top: 60%; left: 68%;">7</div>
+            <div class="nivel bloqueado" data-nivel="8" style="top: 60%; left: 22%;">8</div>
+            <div class="nivel bloqueado" data-nivel="9" style="top: 74%; left: 22%;">9</div>
+            <div class="nivel bloqueado" data-nivel="10" style="top: 74%; left: 68%;">10</div>
         </div>
 
         <!-- Ventana de preguntas -->
         <div id="ventanaPregunta" class="ventana-pregunta">
             <h3 id="textoPregunta"></h3>
-            <img id="imagenPregunta" src="" alt="Imagen" class="imagen-pregunta">
             <div id="opciones" class="opciones"></div>
             <button onclick="cerrarPregunta()">Cerrar</button>
         </div>
 
         <!-- Sonidos -->
-        <audio id="sonidoCorrecto" src="sounds/correct.mp3" preload="auto">
-        <audio id="sonidoIncorrecto" src="sounds/wrong.mp3" preload="auto">
-        <audio id="sonidoVictoria" src="sounds/victory.mp3" preload="auto">
+        <audio id="sonidoCorrecto" preload="auto">
+            <source src="sounds/correct.mp3" type="audio/mpeg">
+        
+        <audio id="sonidoIncorrecto" preload="auto">
+            <source src="sounds/wrong.mp3" type="audio/mpeg">
+        
     </div>
 
     <script src="game.js"></script>
