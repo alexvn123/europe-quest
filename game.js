@@ -1,6 +1,6 @@
 let puntos = 0;
 let vidas = 3;
-let nivelActual = 1; // Solo se puede jugar este nivel hasta acertar
+let nivelActual = 1; // Empieza en el nivel 1
 
 // 📋 LAS 10 PREGUNTAS COMPLETAS
 const preguntas = [
@@ -81,7 +81,7 @@ function iniciarJuego() {
     document.getElementById('pantallaInicio').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
     actualizarInfo();
-    actualizarEstadosNiveles(); // Desbloquea solo el nivel 1 al empezar
+    actualizarEstadosNiveles();
 }
 
 // Actualizar marcadores
@@ -90,9 +90,9 @@ function actualizarInfo() {
     document.getElementById('vidas').textContent = vidas;
 }
 
-// Cambia los niveles: desbloquea solo hasta el nivel actual
+// Desbloquear solo hasta el nivel actual
 function actualizarEstadosNiveles() {
-    document.querySelectorAll('.punto-nivel').forEach(boton => {
+    document.querySelectorAll('.nivel').forEach(boton => {
         const nivel = parseInt(boton.dataset.nivel);
         if (nivel <= nivelActual) {
             boton.classList.remove('bloqueado');
@@ -104,7 +104,7 @@ function actualizarEstadosNiveles() {
     });
 }
 
-// Mostrar pregunta solo si el nivel está desbloqueado
+// Mostrar pregunta
 function mostrarPregunta(pregunta) {
     document.getElementById('textoPregunta').textContent = pregunta.enunciado;
     document.getElementById('imagenPregunta').src = pregunta.imagen;
@@ -122,7 +122,7 @@ function mostrarPregunta(pregunta) {
     document.getElementById('ventanaPregunta').style.display = 'block';
 }
 
-// Verificar respuesta: solo avanza si acierta
+// Verificar respuesta y avanzar solo si acierta
 function verificar(elegida, correcta, nivelPregunta) {
     const sonidoBien = document.getElementById('sonidoCorrecto');
     const sonidoMal = document.getElementById('sonidoIncorrecto');
@@ -133,16 +133,14 @@ function verificar(elegida, correcta, nivelPregunta) {
         sonidoBien.play().catch(() => {});
         alert(`✅ Correct! +10 points`);
 
-        // Si acierta, desbloquea el siguiente nivel
         if (nivelPregunta === nivelActual && nivelActual < 10) {
             nivelActual++;
             actualizarEstadosNiveles();
         }
 
-        // Si terminó todos los niveles
         if (nivelPregunta === 10) {
             sonidoFin.play().catch(() => {});
-            alert(`🎉 CONGRATULATIONS! You finished all levels! Final score: ${puntos} points`);
+            alert(`🏆 CONGRATULATIONS! You completed the whole adventure! Final score: ${puntos} points`);
         }
 
     } else {
@@ -153,7 +151,6 @@ function verificar(elegida, correcta, nivelPregunta) {
         if (vidas <= 0) {
             sonidoFin.play().catch(() => {});
             alert(`💀 Game Over! Final score: ${puntos} points`);
-            // Reiniciar progreso
             puntos = 0;
             vidas = 3;
             nivelActual = 1;
@@ -171,12 +168,12 @@ function cerrarPregunta() {
     document.getElementById('ventanaPregunta').style.display = 'none';
 }
 
-// Activar botones al cargar
+// Activar botones
 window.addEventListener('load', () => {
-    document.querySelectorAll('.punto-nivel').forEach(boton => {
+    document.querySelectorAll('.nivel').forEach(boton => {
         boton.addEventListener('click', () => {
             const nivel = parseInt(boton.dataset.nivel);
-            if (nivel === nivelActual) { // Solo deja jugar el nivel actual
+            if (nivel === nivelActual) {
                 const pregunta = preguntas.find(p => p.nivel === nivel);
                 if (pregunta) mostrarPregunta(pregunta);
             } else if (nivel > nivelActual) {
