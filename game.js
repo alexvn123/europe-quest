@@ -2,65 +2,75 @@ let puntos = 0;
 let vidas = 3;
 let nivelActual = 1;
 
-// 📋 10 PREGUNTAS
+// 📋 PREGUNTAS CON TUS IMÁGENES
 const preguntas = [
     {
         nivel: 1,
         enunciado: "¿En qué hemisferio se encuentra Europa?",
+        imagen: "imagenes/europe-countries.jpg",
         opciones: ["A) Sur", "B) Norte", "C) Este", "D) Oeste"],
         correcta: "B) Norte"
     },
     {
         nivel: 2,
         enunciado: "¿Qué océano está al oeste de Europa?",
+        imagen: "imagenes/atlantic-ocean.jpg",
         opciones: ["A) Pacífico", "B) Índico", "C) Atlántico", "D) Ártico"],
         correcta: "C) Atlántico"
     },
     {
         nivel: 3,
         enunciado: "¿Cuántas estrellas tiene la bandera de la Unión Europea?",
+        imagen: "imagenes/eu-flag.jpg",
         opciones: ["A) 10", "B) 12", "C) 15", "D) 20"],
         correcta: "B) 12"
     },
     {
         nivel: 4,
         enunciado: "¿Cuál es una lengua muy hablada en Europa?",
+        imagen: "imagenes/european-union.jpg",
         opciones: ["A) Alemán", "B) Japonés", "C) Hindi", "D) Chino"],
         correcta: "A) Alemán"
     },
     {
         nivel: 5,
         enunciado: "¿Qué país es famoso por la pizza y la pasta?",
+        imagen: "imagenes/italy.jpg",
         opciones: ["A) Francia", "B) Alemania", "C) Italia", "D) España"],
         correcta: "C) Italia"
     },
     {
         nivel: 6,
         enunciado: "¿Qué civilización influyó mucho en la cultura europea?",
+        imagen: "imagenes/colosseum.jpg",
         opciones: ["A) Romana", "B) Maya", "C) Inca", "D) Azteca"],
         correcta: "A) Romana"
     },
     {
         nivel: 7,
         enunciado: "¿En qué país se encuentra la Torre Eiffel?",
+        imagen: "imagenes/eiffel-tower.jpg",
         opciones: ["A) Italia", "B) España", "C) Francia", "D) Portugal"],
         correcta: "C) Francia"
     },
     {
         nivel: 8,
         enunciado: "¿Qué cordillera montañosa está en Europa?",
+        imagen: "imagenes/alps.jpg",
         opciones: ["A) Andes", "B) Alpes", "C) Rocosas", "D) Himalaya"],
         correcta: "B) Alpes"
     },
     {
         nivel: 9,
-        enunciado: "Europa tiene más de...",
-        opciones: ["A) 10 países", "B) 20 países", "C) 40 países", "D) 30 países"],
-        correcta: "C) 40 países"
+        enunciado: "¿Cuál es la capital de Alemania?",
+        imagen: "imagenes/berlin.jpg",
+        opciones: ["A) París", "B) Roma", "C) Berlín", "D) Madrid"],
+        correcta: "C) Berlín"
     },
     {
         nivel: 10,
         enunciado: "¿Qué representan las estrellas de la bandera de la UE?",
+        imagen: "imagenes/eu-flag.jpg",
         opciones: ["A) Guerra", "B) Turismo", "C) Dinero", "D) Unidad"],
         correcta: "D) Unidad"
     }
@@ -108,9 +118,10 @@ function actualizarEstadosNiveles() {
     });
 }
 
-// Mostrar pregunta
+// Mostrar pregunta con su imagen
 function mostrarPregunta(pregunta) {
     document.getElementById('textoPregunta').textContent = pregunta.enunciado;
+    document.getElementById('imagenPregunta').src = pregunta.imagen;
     const contenedor = document.getElementById('opciones');
     contenedor.innerHTML = '';
 
