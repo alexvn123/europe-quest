@@ -1,204 +1,191 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+let points = 0;
+let lives = 3;
+let currentLevel = 1;
+
+// 📋 QUESTIONS IN ENGLISH + YOUR IMAGES
+const questions = [
+    {
+        level: 1,
+        text: "In which hemisphere is Europe located?",
+        image: "imagenes/europe-countries.jpg",
+        options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"],
+        correct: "B) Northern"
+    },
+    {
+        level: 2,
+        text: "Which ocean lies to the west of Europe?",
+        image: "imagenes/atlantic-ocean.jpg",
+        options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"],
+        correct: "C) Atlantic"
+    },
+    {
+        level: 3,
+        text: "How many stars are on the European Union flag?",
+        image: "imagenes/eu-flag.jpg",
+        options: ["A) 10", "B) 12", "C) 15", "D) 20"],
+        correct: "B) 12"
+    },
+    {
+        level: 4,
+        text: "Which language is widely spoken in Europe?",
+        image: "imagenes/european-union.jpg",
+        options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"],
+        correct: "A) German"
+    },
+    {
+        level: 5,
+        text: "Which country is famous for pizza and pasta?",
+        image: "imagenes/italy.jpg",
+        options: ["A) France", "B) Germany", "C) Italy", "D) Spain"],
+        correct: "C) Italy"
+    },
+    {
+        level: 6,
+        text: "Which civilization greatly influenced European culture?",
+        image: "imagenes/colosseum.jpg",
+        options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"],
+        correct: "A) Roman"
+    },
+    {
+        level: 7,
+        text: "In which country is the Eiffel Tower located?",
+        image: "imagenes/eiffel-tower.jpg",
+        options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"],
+        correct: "C) France"
+    },
+    {
+        level: 8,
+        text: "Which mountain range is found in Europe?",
+        image: "imagenes/alps.jpg",
+        options: ["A) Andes", "B) Alps", "C) Rockies", "D) Himalayas"],
+        correct: "B) Alps"
+    },
+    {
+        level: 9,
+        text: "What is the capital city of Germany?",
+        image: "imagenes/berlin.jpg",
+        options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"],
+        correct: "C) Berlin"
+    },
+    {
+        level: 10,
+        text: "What do the stars on the EU flag represent?",
+        image: "imagenes/eu-flag.jpg",
+        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"],
+        correct: "D) Unity"
+    }
+];
+
+// Start game
+function startGame() {
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    resetProgress();
 }
 
-body {
-    background: #0f172a;
-    min-height: 100vh;
-    color: white;
-    overflow: hidden;
+// Reset all progress
+function resetProgress() {
+    points = 0;
+    lives = 3;
+    currentLevel = 1;
+    updateInfo();
+    updateLevelsState();
 }
 
-/* ---------------- START SCREEN ---------------- */
-.start-screen {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 2rem;
-    background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+// Return to start screen
+function returnToStart() {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'flex';
 }
 
-.start-screen h1 {
-    font-size: 3rem;
-    color: #ffd700;
-    text-shadow: 0 0 15px rgba(255,215,0,0.6);
-    margin-bottom: 1.5rem;
+// Update scores and lives
+function updateInfo() {
+    document.getElementById('points').textContent = points;
+    document.getElementById('lives').textContent = lives;
 }
 
-.start-screen p {
-    font-size: 1.3rem;
-    color: #cbd5e1;
-    margin-bottom: 2.5rem;
+// Unlock levels in order
+function updateLevelsState() {
+    document.querySelectorAll('.level').forEach(level => {
+        const num = parseInt(level.dataset.level);
+        if (num <= currentLevel) {
+            level.classList.remove('locked');
+            level.classList.add('unlocked');
+        } else {
+            level.classList.remove('unlocked');
+            level.classList.add('locked');
+        }
+    });
 }
 
-.play-button {
-    padding: 1.2rem 3rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
-    color: #0f172a;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(212,175,55,0.6);
-    transition: transform 0.2s;
+// Show question with its image
+function showQuestion(question) {
+    document.getElementById('questionText').textContent = question.text;
+    document.getElementById('questionImage').src = question.image;
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+
+    question.options.forEach(option => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.textContent = option;
+        div.onclick = () => checkAnswer(option, question.correct, question.level);
+        container.appendChild(div);
+    });
+
+    document.getElementById('questionModal').style.display = 'block';
 }
 
-.play-button:hover {
-    transform: scale(1.05);
+// Check answer → NO CORRECT ANSWER SHOWN
+function checkAnswer(selected, correctAnswer, levelNumber) {
+    const soundCorrect = document.getElementById('correctSound');
+    const soundWrong = document.getElementById('wrongSound');
+
+    if (selected === correctAnswer) {
+        points += 10;
+        soundCorrect.play().catch(() => {});
+        alert("✅ Correct!");
+
+        if (levelNumber === currentLevel && currentLevel < 10) {
+            currentLevel++;
+            updateLevelsState();
+        }
+
+        if (levelNumber === 10) {
+            alert(`🎉 Congratulations! You completed all levels. Final score: ${points} points`);
+            returnToStart();
+        }
+
+    } else {
+        lives -= 1;
+        soundWrong.play().catch(() => {});
+        alert("❌ Wrong answer! Try again.");
+
+        if (lives <= 0) {
+            alert(`💀 Game Over! Final score: ${points} points`);
+            returnToStart();
+        }
+    }
+
+    updateInfo();
+    closeQuestion();
 }
 
-/* ---------------- GAME ---------------- */
-.game {
-    width: 100vw;
-    height: 100vh;
+function closeQuestion() {
+    document.getElementById('questionModal').style.display = 'none';
 }
 
-.top-panel {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    font-size: 26px;
-    font-weight: bold;
-    background: rgba(15, 23, 42, 0.85);
-    border-bottom: 2px solid #d4af37;
-    z-index: 10;
-    position: relative;
-}
-
-.points { color: #ffd700; }
-.lives { color: #ef4444; }
-
-.map-container {
-    width: 100%;
-    height: calc(100vh - 70px);
-    position: relative;
-    overflow: hidden;
-}
-
-.background-map {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.95;
-}
-
-.path {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    pointer-events: none;
-}
-
-/* Level Style */
-.level {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    font-size: 28px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease;
-    z-index: 5;
-    border: 3px solid #d4af37;
-}
-
-.level.locked {
-    background: rgba(71, 85, 105, 0.85);
-    color: #94a3b8;
-    cursor: not-allowed;
-    border-color: #64748b;
-}
-
-.level.unlocked {
-    background: linear-gradient(180deg, #fef3c7 0%, #d4af37 100%);
-    color: #0f172a;
-    box-shadow: 0 0 18px #d4af37, 0 0 30px rgba(212,175,55,0.6);
-    cursor: pointer;
-}
-
-.level.unlocked:active {
-    transform: scale(0.92);
-}
-
-/* ---------------- QUESTION MODAL ---------------- */
-.question-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 92%;
-    max-width: 450px;
-    padding: 25px;
-    background: #ffffff;
-    color: #0f172a;
-    border-radius: 14px;
-    box-shadow: 0 0 35px rgba(0,0,0,0.8);
-    display: none;
-    z-index: 20;
-    text-align: center;
-    border: 3px solid #d4af37;
-}
-
-.question-modal h3 {
-    margin-bottom: 20px;
-    font-size: 1.25rem;
-    line-height: 1.5;
-}
-
-.question-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 2px solid #cbd5e1;
-}
-
-.options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.option {
-    padding: 12px;
-    border: 2px solid #cbd5e1;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    text-align: left;
-    transition: all 0.2s ease;
-}
-
-.option:hover {
-    border-color: #d4af37;
-    background: #fef3c7;
-}
-
-button {
-    padding: 10px 20px;
-    background: #0f172a;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px;
-    border: 1px solid #d4af37;
-}
+// Activate level buttons
+window.addEventListener('load', () => {
+    document.querySelectorAll('.level').forEach(level => {
+        level.addEventListener('click', () => {
+            const num = parseInt(level.dataset.level);
+            if (num === currentLevel) {
+                const question = questions.find(q => q.level === num);
+                if (question) showQuestion(question);
+            } else if (num > currentLevel) {
+                alert(`🔒 Level ${num} is locked! Complete level ${currentLevel} first.`);
+            }
+        });
+    });
+});
