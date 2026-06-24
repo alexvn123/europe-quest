@@ -3,49 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Europe Quest</title>
+    <title>Aventura Legendaria - Europe Quest</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- PANTALLA DE INICIO -->
     <div id="pantallaInicio" class="pantalla-inicio">
-        <img src="imagenes/cover.png" alt="Portada" class="portada">
-        <h1>EUROPE QUEST</h1>
-        <p>Answer correctly to unlock the next level!</p>
-        <button onclick="iniciarJuego()" class="boton-jugar">PLAY GAME</button>
-        <img src="imagenes/trophy.png" alt="Trofeo" class="trofeo">
+        <h1>AVENTURA LEGENDARIA</h1>
+        <p>Responde correctamente para avanzar en tu camino</p>
+        <button onclick="iniciarJuego()" class="boton-jugar">COMENZAR AVENTURA</button>
     </div>
 
     <!-- JUEGO PRINCIPAL -->
     <div id="juego" class="juego" style="display: none;">
         <!-- Panel superior -->
         <div class="panel-superior">
-            <div class="puntos">Points: <span id="puntos">0</span></div>
-            <div class="vidas">Lives: <span id="vidas">3</span></div>
+            <div class="puntos">⭐ Puntos: <span id="puntos">0</span></div>
+            <div class="vidas">❤️ Vidas: <span id="vidas">3</span></div>
         </div>
 
-        <!-- Mapa con camino dorado -->
+        <!-- MAPA CON CAMINO EN ESPIRAL/SERPIENTE -->
         <div class="mapa-contenedor">
-            <!-- Fondo con mapa de Europa -->
-            <img src="imagenes/europe-map.jpg" alt="Mapa Europa" class="fondo-mapa">
+            <!-- Fondo temático -->
+            <img src="imagenes/mapa-aventura.jpg" alt="Mapa de Aventura" class="fondo-mapa">
 
-            <!-- Camino dorado exacto al diseño -->
+            <!-- Camino dorado conectando los niveles -->
             <svg class="camino" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M 60 15 C 45 25, 40 35, 55 40 C 65 42, 75 45, 80 50 C 70 55, 50 58, 35 60 C 25 62, 15 65, 20 70 C 30 75, 50 78, 70 80 C 80 82, 85 85, 80 90 C 70 95, 50 98, 35 95" 
-                      fill="none" stroke="#ffd700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M 15 15 C 30 20, 50 25, 70 30 C 80 35, 85 45, 75 55 C 60 60, 40 65, 25 70 C 20 75, 25 85, 40 90 C 55 92, 75 90, 85 80 C 90 70, 85 55, 70 45" 
+                      fill="none" stroke="#d4af37" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(212,175,55,0.7))" />
             </svg>
 
-            <!-- Puntos del 1 al 10, en orden de recorrido -->
-            <div class="punto-nivel bloqueado" data-nivel="1" style="top: 15%; left: 60%;">1</div>
-            <div class="punto-nivel bloqueado" data-nivel="2" style="top: 40%; left: 80%;">2</div>
-            <div class="punto-nivel bloqueado" data-nivel="3" style="top: 60%; left: 20%;">3</div>
-            <div class="punto-nivel bloqueado" data-nivel="4" style="top: 70%; left: 30%;">4</div>
-            <div class="punto-nivel bloqueado" data-nivel="5" style="top: 80%; left: 70%;">5</div>
-            <div class="punto-nivel bloqueado" data-nivel="6" style="top: 95%; left: 35%;">6</div>
-            <div class="punto-nivel bloqueado" data-nivel="7" style="top: 25%; left: 50%;">7</div>
-            <div class="punto-nivel bloqueado" data-nivel="8" style="top: 50%; left: 45%;">8</div>
-            <div class="punto-nivel bloqueado" data-nivel="9" style="top: 30%; left: 65%;">9</div>
-            <div class="punto-nivel bloqueado" data-nivel="10" style="top: 88%; left: 55%;">10</div>
+            <!-- NIVELES EN ORDEN 1 → 2 → 3 → ... → 10 -->
+            <div class="nivel bloqueado" data-nivel="1" style="top: 15%; left: 15%;">1</div>
+            <div class="nivel bloqueado" data-nivel="2" style="top: 30%; left: 70%;">2</div>
+            <div class="nivel bloqueado" data-nivel="3" style="top: 55%; left: 75%;">3</div>
+            <div class="nivel bloqueado" data-nivel="4" style="top: 60%; left: 40%;">4</div>
+            <div class="nivel bloqueado" data-nivel="5" style="top: 70%; left: 25%;">5</div>
+            <div class="nivel bloqueado" data-nivel="6" style="top: 80%; left: 30%;">6</div>
+            <div class="nivel bloqueado" data-nivel="7" style="top: 90%; left: 40%;">7</div>
+            <div class="nivel bloqueado" data-nivel="8" style="top: 88%; left: 75%;">8</div>
+            <div class="nivel bloqueado" data-nivel="9" style="top: 75%; left: 85%;">9</div>
+            <div class="nivel bloqueado" data-nivel="10" style="top: 45%; left: 70%;">10</div>
         </div>
 
         <!-- Ventana de preguntas -->
@@ -53,7 +51,7 @@
             <h3 id="textoPregunta"></h3>
             <img id="imagenPregunta" src="" alt="Imagen" class="imagen-pregunta">
             <div id="opciones" class="opciones"></div>
-            <button onclick="cerrarPregunta()">Close</button>
+            <button onclick="cerrarPregunta()">Cerrar</button>
         </div>
 
         <!-- Sonidos -->
