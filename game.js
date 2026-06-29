@@ -1,186 +1,121 @@
-// Configuración del juego
-const TIME_LIMIT = 15;
-const MAX_LIVES = 3;
-const POINTS_CORRECT = 10;
-
-// Preguntas con tus imágenes
-const questions = [
-    {
-        question: "What is the capital of France?",
-        image: "imagenes/eiffel-tower.jpg",
-        options: ["London", "Paris", "Berlin", "Madrid"],
-        correct: 1
-    },
-    {
-        question: "In which city can you visit the Colosseum?",
-        image: "imagenes/colosseum.jpg",
-        options: ["Rome", "Athens", "Lisbon", "Vienna"],
-        correct: 0
-    },
-    {
-        question: "What is the capital of Germany?",
-        image: "imagenes/berlin.jpg",
-        options: ["Madrid", "Paris", "Berlin", "Amsterdam"],
-        correct: 2
-    },
-    {
-        question: "Which mountain range runs across Central Europe?",
-        image: "imagenes/alps.jpg",
-        options: ["Andes", "Alps", "Himalayas", "Rockies"],
-        correct: 1
-    },
-    {
-        question: "Which ocean borders Western Europe?",
-        image: "imagenes/atlantic-ocean.jpg",
-        options: ["Pacific", "Indian", "Atlantic", "Arctic"],
-        correct: 2
-    },
-    {
-        question: "Which country is shaped like a boot?",
-        image: "imagenes/italy.jpg",
-        options: ["Spain", "Italy", "Greece", "Portugal"],
-        correct: 1
-    },
-    {
-        question: "Which is the official currency of the European Union?",
-        image: "imagenes/eu-flag.jpg",
-        options: ["Dollar", "Pound", "Euro", "Franc"],
-        correct: 2
-    }
-];
-
-// Variables de estado
-let playerName = "";
-let currentScore = 0;
-let currentLives = 0;
-let currentQuestionIndex = 0;
-let timerInterval;
-
-// --- Funciones de puntajes ---
-function loadScores() {
-    const saved = localStorage.getItem("europeQuestScores");
-    return saved ? JSON.parse(saved) : [];
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-function saveScore(name, score) {
-    const scores = loadScores();
-    scores.push({ name, score });
-    scores.sort((a, b) => b.score - a.score);
-    localStorage.setItem("europeQuestScores", JSON.stringify(scores));
-    renderScores();
+body {
+    background: #f0f4f8;
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
 }
 
-function renderScores() {
-    const scores = loadScores();
-    const tbody = document.getElementById("scoresBody");
-    tbody.innerHTML = "";
-    if (scores.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="2">No scores yet</td></tr>`;
-        return;
-    }
-    scores.forEach(entry => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${entry.name}</td><td>${entry.score}</td>`;
-        tbody.appendChild(row);
-    });
+header {
+    margin-bottom: 1.5rem;
 }
 
-// --- Lógica del juego ---
-function startGame() {
-    playerName = document.getElementById("playerName").value.trim();
-    if (!playerName) {
-        alert("Please enter your name!");
-        return;
-    }
-    currentScore = 0;
-    currentLives = MAX_LIVES;
-    currentQuestionIndex = 0;
-
-    document.getElementById("startScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-
-    document.getElementById("displayName").textContent = playerName;
-    document.getElementById("lives").textContent = currentLives;
-    document.getElementById("score").textContent = currentScore;
-
-    showQuestion();
+#header-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-function showQuestion() {
-    clearInterval(timerInterval);
-    if (currentQuestionIndex >= questions.length) {
-        endGame();
-        return;
-    }
-    const q = questions[currentQuestionIndex];
-    document.getElementById("questionText").textContent = q.question;
-
-    // Mostrar imagen de la pregunta
-    const imgBox = document.getElementById("questionImage");
-    imgBox.innerHTML = `<img src="${q.image}" alt="Clue">`;
-
-    const optionsDiv = document.getElementById("optionsContainer");
-    optionsDiv.innerHTML = "";
-    q.options.forEach((opt, i) => {
-        const btn = document.createElement("button");
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(i);
-        optionsDiv.appendChild(btn);
-    });
-
-    startTimer();
+h1 {
+    color: #1a4b8c;
+    margin-top: 1rem;
 }
 
-function startTimer() {
-    let timeLeft = TIME_LIMIT;
-    document.getElementById("timer").textContent = timeLeft;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        document.getElementById("timer").textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            alert("Time's up! ❌");
-            loseLife();
-        }
-    }, 1000);
+.screen {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
 }
 
-function checkAnswer(selectedIndex) {
-    clearInterval(timerInterval);
-    const q = questions[currentQuestionIndex];
-    if (selectedIndex === q.correct) {
-        alert("Correct! ✅");
-        currentScore += POINTS_CORRECT;
-        document.getElementById("score").textContent = currentScore;
-    } else {
-        alert("Wrong answer! ❌");
-        loseLife();
-    }
-    currentQuestionIndex++;
-    setTimeout(showQuestion, 800);
+.hidden {
+    display: none;
 }
 
-function loseLife() {
-    currentLives--;
-    document.getElementById("lives").textContent = currentLives;
-    if (currentLives <= 0) {
-        setTimeout(endGame, 800);
-    }
+.small-img {
+    width: 90px;
+    height: auto;
+    margin-bottom: 1rem;
 }
 
-function endGame() {
-    clearInterval(timerInterval);
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.remove("hidden");
-    document.getElementById("finalScore").textContent = currentScore;
-    saveScore(playerName, currentScore);
+#questionImage img {
+    max-width: 220px;
+    max-height: 150px;
+    margin: 1rem auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
 }
 
-function restartGame() {
-    document.getElementById("endScreen").classList.add("hidden");
-    document.getElementById("startScreen").classList.remove("hidden");
+input, select, button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
 }
 
-// Cargar puntajes al inicio
-window.onload = renderScores;
+button {
+    background: #2c5c97;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #234a7a;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+#timer {
+    color: #d63031;
+    font-weight: bold;
+}
+
+.options button {
+    background: #4a7cb8;
+    margin: 0.4rem 0;
+}
+
+.options button:hover {
+    background: #3b6696;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #2c5c97;
+    color: white;
+}
