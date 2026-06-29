@@ -2,98 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Europe Quest 🗺️</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Europe Quest</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Pantalla de Inicio Principal -->
-    <div id="mainStartScreen" class="screen active">
-        <img src="imagenes/europe-quest-map.jpg" alt="Europe Quest Map" id="mainMap">
-        <h1>🗺️ EUROPE QUEST</h1>
-        <p>Embark on a journey across Europe! Answer correctly to advance through the levels.</p>
-        <input type="text" id="playerName" placeholder="Enter your name to start" required>
-        <button onclick="openLevelMap()">View Level Map</button>
-        <!-- ✅ Nuevo botón para ver puntajes -->
-        <button onclick="openScores()" class="secondary-btn">View All Scores</button>
+    <!-- START SCREEN -->
+    <div id="startScreen" class="start-screen">
+        <h1>EUROPE QUEST</h1>
+        <p>Answer correctly to advance through your adventure</p>
+        <input type="text" id="playerName" placeholder="Enter your name to play" required>
+        <button onclick="startGame()" class="play-button">START ADVENTURE</button>
+        <button onclick="openScores()" class="scores-button">VIEW ALL SCORES</button>
     </div>
 
-    <!-- Pantalla del Mapa de Niveles -->
-    <div id="levelMapScreen" class="screen hidden">
-        <h2>📜 Level Path</h2>
+    <!-- MAIN GAME -->
+    <div id="game" class="game" style="display: none;">
+        <!-- Top Panel -->
+        <div class="top-panel">
+            <div class="player">👤 Player: <span id="displayName">Guest</span></div>
+            <div class="points">⭐ Points: <span id="points">0</span></div>
+            <div class="lives">❤️ Lives: <span id="lives">3</span></div>
+            <div class="timer">⏱️ Time: <span id="timeLeft">15</span>s</div>
+        </div>
+
+        <!-- MAP WITH BACKGROUND IMAGE -->
         <div class="map-container">
-            <img src="imagenes/europe-quest-map.jpg" alt="Adventure Map" id="levelMapBg">
-            <div class="level-path">
-                <div class="level-node" data-level="1">1</div>
-                <div class="level-node" data-level="2">2</div>
-                <div class="level-node" data-level="3">3</div>
-                <div class="level-node" data-level="4">4</div>
-                <div class="level-node" data-level="5">5</div>
-                <div class="level-node" data-level="6">6</div>
-                <div class="level-node" data-level="7">7</div>
-                <div class="level-node" data-level="8">8</div>
-                <div class="level-node" data-level="9">9</div>
-                <div class="level-node" data-level="10">10</div>
-            </div>
-        </div>
-        <button onclick="backToMain()">Back</button>
-        <div class="progress-note">
-            <p>🔓 Levels unlocked: <span id="unlockedDisplay">1</span></p>
-        </div>
-    </div>
+            <img src="imagenes/euro-map.jpg" alt="Europe Map" class="background-map">
 
-    <!-- Pantalla del Juego -->
-    <div id="gameScreen" class="screen hidden">
-        <div class="stats">
-            <span>Player: <span id="displayName"></span></span>
-            <span>Level: <span id="currentLevel"></span>/10</span>
-            <span>Lives: ❤️ <span id="lives">3</span></span>
-            <span>Score: <span id="score">0</span></span>
-            <span>Time: <span id="timer">15</span>s</span>
+            <!-- Golden Path following your sequence -->
+            <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M 20 18 L 70 18 L 70 32 L 20 32 L 20 46 L 70 46 L 70 60 L 20 60 L 20 74 L 70 74" 
+                      fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
+            </svg>
+
+            <!-- Levels in exact order -->
+            <div class="level locked" data-level="1" style="top: 18%; left: 20%;">1</div>
+            <div class="level locked" data-level="2" style="top: 18%; left: 70%;">2</div>
+            <div class="level locked" data-level="3" style="top: 32%; left: 70%;">3</div>
+            <div class="level locked" data-level="4" style="top: 32%; left: 20%;">4</div>
+            <div class="level locked" data-level="5" style="top: 46%; left: 20%;">5</div>
+            <div class="level locked" data-level="6" style="top: 46%; left: 70%;">6</div>
+            <div class="level locked" data-level="7" style="top: 60%; left: 70%;">7</div>
+            <div class="level locked" data-level="8" style="top: 60%; left: 20%;">8</div>
+            <div class="level locked" data-level="9" style="top: 74%; left: 20%;">9</div>
+            <div class="level locked" data-level="10" style="top: 74%; left: 70%;">10</div>
         </div>
 
-        <div id="questionBox">
-            <div id="questionImage"></div>
+        <!-- Question Window -->
+        <div id="questionModal" class="question-modal">
             <h3 id="questionText"></h3>
-            <div class="options" id="optionsContainer"></div>
+            <img id="questionImage" src="" alt="Question image" class="question-image">
+            <div id="optionsContainer" class="options"></div>
+            <button onclick="closeQuestion()">Close</button>
         </div>
 
-        <button class="back-btn" onclick="returnToMap()">Back to Map</button>
-    </div>
+        <!-- 🎉 Victory Screen -->
+        <div id="victoryScreen" class="victory-modal">
+            <h2>🏆 CONGRATULATIONS! YOU WON!</h2>
+            <img src="imagenes/europe-countries.jpg" alt="Victory" class="victory-image">
+            <p>You have completed all 10 levels!</p>
+            <p>Final Score: <strong id="finalScore"></strong></p>
+            <button onclick="returnToStart()">Back to Menu</button>
+        </div>
 
-    <!-- Pantalla de Resultado -->
-    <div id="endScreen" class="screen hidden">
-        <h2 id="resultTitle"></h2>
-        <p id="resultText"></p>
-        <button onclick="returnToMap()">Back to Level Map</button>
-    </div>
+        <!-- 🏆 Scores Screen -->
+        <div id="scoresScreen" class="scores-modal">
+            <h2>🏆 ALL PLAYERS PROGRESS</h2>
+            <table id="scoresTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Max Level</th>
+                        <th>Best Score</th>
+                    </tr>
+                </thead>
+                <tbody id="scoresBody"></tbody>
+            </table>
+            <button onclick="closeScores()">Back to Menu</button>
+        </div>
 
-    <!-- Pantalla Final de Victoria -->
-    <div id="victoryScreen" class="screen hidden">
-        <h2>🏆 CONGRATULATIONS! YOU WON!</h2>
-        <img src="imagenes/europe-countries.jpg" alt="Europe Complete" style="max-width:220px; margin:1.5rem auto; border-radius:12px;">
-        <p>You have successfully completed all 10 levels of Europe Quest!</p>
-        <p>Your final score: <strong id="finalVictoryScore"></strong></p>
-        <p>You are now a true expert on Europe!</p>
-        <button onclick="returnToMap()">Back to Main Map</button>
-    </div>
-
-    <!-- ✅ Pantalla de Puntajes Generales -->
-    <div id="scoresScreen" class="screen hidden">
-        <h2>🏆 ALL PLAYERS PROGRESS & SCORES</h2>
-        <table id="allScoresTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player Name</th>
-                    <th>Highest Level</th>
-                    <th>Best Score</th>
-                </tr>
-            </thead>
-            <tbody id="allScoresBody"></tbody>
-        </table>
-        <button onclick="backToMain()">Back to Main Menu</button>
+        <!-- Sounds -->
+        <audio id="correctSound" preload="auto">
+            <source src="sounds/correct.mp3" type="audio/mpeg">
+        
+        <audio id="wrongSound" preload="auto">
+            <source src="sounds/wrong.mp3" type="audio/mpeg">
+        
     </div>
 
     <script src="game.js"></script>
