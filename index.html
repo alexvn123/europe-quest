@@ -8,39 +8,46 @@
 </head>
 <body>
 
-    <header>
-        <img src="imagenes/euro-map.jpg" alt="Europe Map" id="header-img">
+    <!-- Pantalla de Inicio Principal -->
+    <div id="mainStartScreen" class="screen active">
+        <img src="imagenes/europe-quest-map.jpg" alt="Europe Quest Map" id="mainMap">
         <h1>🗺️ EUROPE QUEST</h1>
-    </header>
-
-    <!-- Pantalla de inicio -->
-    <div id="startScreen" class="screen">
-        <img src="imagenes/eu-flag.jpg" alt="EU Flag" class="small-img">
-        <h2>Welcome! Enter your name</h2>
-        <input type="text" id="playerName" placeholder="Your name here" required>
-
-        <h3>Select Level:</h3>
-        <select id="levelSelect">
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-            <option value="4">Level 4</option>
-            <option value="5">Level 5</option>
-            <option value="6">Level 6</option>
-            <option value="7">Level 7</option>
-            <option value="8">Level 8</option>
-            <option value="9">Level 9</option>
-            <option value="10">Level 10</option>
-        </select>
-
-        <button onclick="startGame()">Start Game</button>
+        <p>Embark on a journey across Europe! Answer correctly to advance through the levels.</p>
+        <input type="text" id="playerName" placeholder="Enter your name to start" required>
+        <button onclick="openLevelMap()">View Level Map</button>
+        <!-- ✅ Nuevo botón para ver puntajes -->
+        <button onclick="openScores()" class="secondary-btn">View All Scores</button>
     </div>
 
-    <!-- Pantalla del juego -->
+    <!-- Pantalla del Mapa de Niveles -->
+    <div id="levelMapScreen" class="screen hidden">
+        <h2>📜 Level Path</h2>
+        <div class="map-container">
+            <img src="imagenes/europe-quest-map.jpg" alt="Adventure Map" id="levelMapBg">
+            <div class="level-path">
+                <div class="level-node" data-level="1">1</div>
+                <div class="level-node" data-level="2">2</div>
+                <div class="level-node" data-level="3">3</div>
+                <div class="level-node" data-level="4">4</div>
+                <div class="level-node" data-level="5">5</div>
+                <div class="level-node" data-level="6">6</div>
+                <div class="level-node" data-level="7">7</div>
+                <div class="level-node" data-level="8">8</div>
+                <div class="level-node" data-level="9">9</div>
+                <div class="level-node" data-level="10">10</div>
+            </div>
+        </div>
+        <button onclick="backToMain()">Back</button>
+        <div class="progress-note">
+            <p>🔓 Levels unlocked: <span id="unlockedDisplay">1</span></p>
+        </div>
+    </div>
+
+    <!-- Pantalla del Juego -->
     <div id="gameScreen" class="screen hidden">
         <div class="stats">
             <span>Player: <span id="displayName"></span></span>
-            <span>Level: <span id="currentLevel"></span></span>
+            <span>Level: <span id="currentLevel"></span>/10</span>
             <span>Lives: ❤️ <span id="lives">3</span></span>
             <span>Score: <span id="score">0</span></span>
             <span>Time: <span id="timer">15</span>s</span>
@@ -51,29 +58,42 @@
             <h3 id="questionText"></h3>
             <div class="options" id="optionsContainer"></div>
         </div>
+
+        <button class="back-btn" onclick="returnToMap()">Back to Map</button>
     </div>
 
-    <!-- Pantalla de resultado -->
+    <!-- Pantalla de Resultado -->
     <div id="endScreen" class="screen hidden">
-        <img src="imagenes/europe-countries.jpg" alt="Result" class="small-img">
         <h2 id="resultTitle"></h2>
         <p id="resultText"></p>
-        <button onclick="restartGame()">Back to Menu</button>
+        <button onclick="returnToMap()">Back to Level Map</button>
     </div>
 
-    <!-- Tabla de progreso -->
-    <div class="screen">
-        <h3>🏆 Player Progress & Best Scores</h3>
-        <table id="scoresTable">
+    <!-- Pantalla Final de Victoria -->
+    <div id="victoryScreen" class="screen hidden">
+        <h2>🏆 CONGRATULATIONS! YOU WON!</h2>
+        <img src="imagenes/europe-countries.jpg" alt="Europe Complete" style="max-width:220px; margin:1.5rem auto; border-radius:12px;">
+        <p>You have successfully completed all 10 levels of Europe Quest!</p>
+        <p>Your final score: <strong id="finalVictoryScore"></strong></p>
+        <p>You are now a true expert on Europe!</p>
+        <button onclick="returnToMap()">Back to Main Map</button>
+    </div>
+
+    <!-- ✅ Pantalla de Puntajes Generales -->
+    <div id="scoresScreen" class="screen hidden">
+        <h2>🏆 ALL PLAYERS PROGRESS & SCORES</h2>
+        <table id="allScoresTable">
             <thead>
                 <tr>
-                    <th>Player</th>
-                    <th>Max Level Reached</th>
+                    <th>Rank</th>
+                    <th>Player Name</th>
+                    <th>Highest Level</th>
                     <th>Best Score</th>
                 </tr>
             </thead>
-            <tbody id="scoresBody"></tbody>
+            <tbody id="allScoresBody"></tbody>
         </table>
+        <button onclick="backToMain()">Back to Main Menu</button>
     </div>
 
     <script src="game.js"></script>
