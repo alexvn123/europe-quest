@@ -2,64 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Europe Quest</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Europe Quest 🗺️</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- START SCREEN -->
-    <div id="startScreen" class="start-screen">
-        <h1>EUROPE QUEST</h1>
-        <p>Answer correctly to advance through your adventure</p>
-        <button onclick="startGame()" class="play-button">START ADVENTURE</button>
+
+    <header>
+        <img src="imagenes/euro-map.jpg" alt="Europe Map" id="header-img">
+        <h1>🗺️ EUROPE QUEST</h1>
+    </header>
+
+    <!-- Pantalla de inicio -->
+    <div id="startScreen" class="screen">
+        <img src="imagenes/eu-flag.jpg" alt="EU Flag" class="small-img">
+        <h2>Welcome! Enter your name to play</h2>
+        <input type="text" id="playerName" placeholder="Your name here" required>
+        <button onclick="startGame()">Start Game</button>
     </div>
 
-    <!-- MAIN GAME -->
-    <div id="game" class="game" style="display: none;">
-        <!-- Top Panel -->
-        <div class="top-panel">
-            <div class="points">⭐ Points: <span id="points">0</span></div>
-            <div class="lives">❤️ Lives: <span id="lives">3</span></div>
+    <!-- Pantalla del juego -->
+    <div id="gameScreen" class="screen hidden">
+        <div class="stats">
+            <span>Player: <span id="displayName"></span></span>
+            <span>Lives: ❤️ <span id="lives">3</span></span>
+            <span>Score: <span id="score">0</span></span>
+            <span>Time: <span id="timer">15</span>s</span>
         </div>
 
-        <!-- MAP WITH BACKGROUND IMAGE -->
-        <div class="map-container">
-            <img src="imagenes/euro-map.jpg" alt="Europe Map" class="background-map">
-
-            <!-- Golden Path following your sequence -->
-            <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M 20 18 L 70 18 L 70 32 L 20 32 L 20 46 L 70 46 L 70 60 L 20 60 L 20 74 L 70 74" 
-                      fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
-            </svg>
-
-            <!-- Levels in exact order -->
-            <div class="level locked" data-level="1" style="top: 18%; left: 20%;">1</div>
-            <div class="level locked" data-level="2" style="top: 18%; left: 70%;">2</div>
-            <div class="level locked" data-level="3" style="top: 32%; left: 70%;">3</div>
-            <div class="level locked" data-level="4" style="top: 32%; left: 20%;">4</div>
-            <div class="level locked" data-level="5" style="top: 46%; left: 20%;">5</div>
-            <div class="level locked" data-level="6" style="top: 46%; left: 70%;">6</div>
-            <div class="level locked" data-level="7" style="top: 60%; left: 70%;">7</div>
-            <div class="level locked" data-level="8" style="top: 60%; left: 20%;">8</div>
-            <div class="level locked" data-level="9" style="top: 74%; left: 20%;">9</div>
-            <div class="level locked" data-level="10" style="top: 74%; left: 70%;">10</div>
-        </div>
-
-        <!-- Question Window -->
-        <div id="questionModal" class="question-modal">
+        <div id="questionBox">
             <h3 id="questionText"></h3>
-            <img id="questionImage" src="" alt="Question image" class="question-image">
-            <div id="optionsContainer" class="options"></div>
-            <button onclick="closeQuestion()">Close</button>
+            <div id="questionImage"></div>
+            <div class="options" id="optionsContainer"></div>
         </div>
+    </div>
 
-        <!-- Sounds -->
-        <audio id="correctSound" preload="auto">
-            <source src="sounds/correct.mp3" type="audio/mpeg">
-        
-        <audio id="wrongSound" preload="auto">
-            <source src="sounds/wrong.mp3" type="audio/mpeg">
-        
+    <!-- Pantalla final -->
+    <div id="endScreen" class="screen hidden">
+        <img src="imagenes/europe-countries.jpg" alt="Europe" class="small-img">
+        <h2>Game Over!</h2>
+        <p>Your final score: <strong id="finalScore"></strong></p>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+
+    <!-- Tabla de puntajes -->
+    <div class="screen">
+        <h3>🏆 High Scores</h3>
+        <table id="scoresTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="scoresBody"></tbody>
+        </table>
     </div>
 
     <script src="game.js"></script>
