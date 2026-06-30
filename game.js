@@ -3,22 +3,22 @@ let points = 0;
 let lives = 3;
 let currentLevel = 1;
 let timer = null;
-const TIME_LIMIT = 15;
+const TIME_LIMIT = 10;
 
 const questions = [
     {
         level: 1,
         text: "In which hemisphere is Europe located?",
         image: "imagenes/europe-countries.jpg",
-        options: ["A) Southern Hemesphere", "B) Northern Hemesphere", "C) Eastern", "D) Western"],
-        correct: "B) Northern Hemesphere"
+        options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"],
+        correct: "B) Northern"
     },
     {
         level: 2,
         text: "Which ocean lies to the west of Europe?",
         image: "imagenes/atlantic-ocean.jpg",
-        options: ["A) Pacific Ocean", "B) Indian Ocean", "C) Atlantic Ocean", "D) Arctic Ocean"],
-        correct: "C) Atlantic Ocean"
+        options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"],
+        correct: "C) Atlantic"
     },
     {
         level: 3,
@@ -45,8 +45,8 @@ const questions = [
         level: 6,
         text: "Which civilization greatly influenced European culture?",
         image: "imagenes/colosseum.jpg",
-        options: ["A) Roman Empire", "B) Mayan", "C) Inca", "D) Aztec"],
-        correct: "A) Roman Empire"
+        options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"],
+        correct: "A) Roman"
     },
     {
         level: 7,
@@ -64,10 +64,10 @@ const questions = [
     },
     {
         level: 9,
-        text: "Europe has more than...",
+        text: "What is the capital city of Germany?",
         image: "imagenes/berlin.jpg",
-        options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 60 countries"],
-        correct: "C) 40 countries"
+        options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"],
+        correct: "C) Berlin"
     },
     {
         level: 10,
@@ -78,7 +78,7 @@ const questions = [
     }
 ];
 
-// ✅ NUEVA: Función para mezclar respuestas al azar
+// ✅ FUNCIÓN QUE MEZCLA LAS RESPUESTAS CADA VEZ QUE SE ABRE LA PREGUNTA
 function mezclarAleatorio(arr) {
   let copia = [...arr];
   for (let i = copia.length - 1; i > 0; i--) {
@@ -88,7 +88,7 @@ function mezclarAleatorio(arr) {
   return copia;
 }
 
-// --- SISTEMA DE PUNTUACIONES ---
+// Sistema de puntuaciones
 function loadAllPlayers() {
     const saved = localStorage.getItem("europeQuestPlayers");
     return saved ? JSON.parse(saved) : [];
@@ -106,6 +106,7 @@ function savePlayerProgress(name, maxLevel, bestScore) {
     } else {
         players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
     }
+
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
     localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
@@ -114,18 +115,25 @@ function renderScores() {
     const players = loadAllPlayers();
     const tbody = document.getElementById("scoresBody");
     tbody.innerHTML = "";
+
     if (players.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4">No players have played yet</td></tr>`;
         return;
     }
+
     players.forEach((p, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `<td>${index + 1}</td><td>${p.name}</td><td>${p.maxLevel}</td><td>${p.bestScore}</td>`;
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${p.name}</td>
+            <td>Level ${p.maxLevel}</td>
+            <td>${p.bestScore} pts</td>
+        `;
         tbody.appendChild(row);
     });
 }
 
-// --- JUEGO ---
+// Lógica del juego
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
     if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
@@ -145,10 +153,12 @@ function returnToStart() { clearInterval(timer);
     document.getElementById('startScreen').style.display = 'flex';
 }
 
-function openScores() { renderScores();
+function openScores() {
+    renderScores();
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('scoresScreen').style.display = 'block';
 }
+
 function closeScores() {
     document.getElementById('scoresScreen').style.display = 'none';
     document.getElementById('startScreen').style.display = 'flex';
@@ -177,6 +187,7 @@ function startTimer() {
         if (timeLeft <= 0) { clearInterval(timer); timeUp(); }
     }, 1000);
 }
+
 function timeUp() { alert("⏰ Time's up!"); checkAnswer(null,null,currentLevel); }
 
 function showQuestion(question) {
@@ -185,10 +196,10 @@ function showQuestion(question) {
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
 
-    // ✅ AQUÍ SE APLICA: se muestran ya MEZCLADAS
-    const opcionesDesordenadas = mezclarAleatorio(question.options);
+    // ✅ AQUÍ SE APLICA: CADA VEZ QUE ABRES LA PREGUNTA, LAS OPCIONES SE MEZCLAN
+    const opcionesEnOrdenNuevo = mezclarAleatorio(question.options);
 
-    opcionesDesordenadas.forEach(option => {
+    opcionesEnOrdenNuevo.forEach(option => {
         const div = document.createElement('div');
         div.className = 'option';
         div.textContent = option;
