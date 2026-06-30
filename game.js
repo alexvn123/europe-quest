@@ -1,6 +1,6 @@
 // ---------------- CONFIGURACIÓN ----------------
 const GIST_ID = "9e578094f485cb35ff0b76f37c5cb5b6";
-const GIST_FILENAME = "europe-quest-ranking.json";
+const GIST_FILENAME = "europe-quest-ranking";
 const GITHUB_TOKEN = "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";
 
 let playerName = "";
@@ -8,9 +8,9 @@ let points = 0;
 let lives = 3;
 let currentLevel = 1;
 let timer = null;
-const TIME_LIMIT = 15;
+const TIME_LIMIT = 9;
 
-// ✅ RUTAS DE IMÁGENES AJUSTADAS A TUS ARCHIVOS
+// ✅ Rutas de imágenes correctas
 const questions = [
     { level: 1, text: "In which hemisphere is Europe located?", image: "imagenes/europe-map.jpg", options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"], correct: "B) Northern" },
     { level: 2, text: "Which ocean is west of Europe?", image: "imagenes/atlantic-ocean.jpg", options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"], correct: "C) Atlantic" },
@@ -33,6 +33,7 @@ function shuffleArray(arr) {
     return copy;
 }
 
+// ✅ Carga puntuaciones desde la nube
 async function loadScores() {
     try {
         const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
@@ -41,27 +42,45 @@ async function loadScores() {
                 "Accept": "application/vnd.github.v3+json"
             }
         });
-        if (!res.ok) throw new Error("Error al cargar");
+        if (!res.ok) throw new Error("Error al conectar con GitHub");
         const data = await res.json();
-        return JSON.parse(data.files[GIST_FILENAME].content) || [];
+        const content = data.files[GIST_FILENAME].content.trim();
+        return content ? JSON.parse(content) : [];
     } catch (err) {
         console.warn("Usando datos locales:", err);
         return JSON.parse(localStorage.getItem("europeQuestScores") || "[]");
     }
 }
 
+// ✅ Guarda puntuaciones AUTOMÁTICAMENTE en la nube
 async function saveScore(name, maxLevel, totalPoints) {
     if (!name.trim()) return;
+
     try {
         let scores = await loadScores();
-        const existing = scores.find(p => p.name.toLowerCase() === name.toLowerCase());
-        if (existing) {
-            existing.maxLevel = Math.max(existing.maxLevel, maxLevel);
-            existing.points = Math.max(existing.points, totalPoints);
+
+        // Busca si ya existe el jugador
+        const existingIndex = scores.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+        const newEntry = {
+            name: name.trim(),
+            maxLevel: Number(maxLevel) || 0,
+            points: Number(totalPoints) || 0
+        };
+
+        if (existingIndex >= 0) {
+            // Actualiza si tiene mejor marca
+            if (newEntry.maxLevel > scores[existingIndex].maxLevel ||
+                (newEntry.maxLevel === scores[existingIndex].maxLevel && newEntry.points > scores[existingIndex].points)) {
+                scores[existingIndex] = newEntry;
+            }
         } else {
-            scores.push({ name: name.trim(), maxLevel, points: totalPoints });
+            scores.push(newEntry);
         }
+
+        // Ordena: primero por nivel, luego por puntos
         scores.sort((a, b) => b.maxLevel - a.maxLevel || b.points - a.points);
+
+        // Guarda en GitHub
         await fetch(`https://api.github.com/gists/${GIST_ID}`, {
             method: "PATCH",
             headers: {
@@ -70,48 +89,76 @@ async function saveScore(name, maxLevel, totalPoints) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                files: { [GIST_FILENAME]: { content: JSON.stringify(scores, null, 2) } }
+                files: {
+                    [GIST_FILENAME]: {
+                        content: JSON.stringify(scores, null, 2)
+                    }
+                }
             })
         });
+
+        // Guarda copia local
         localStorage.setItem("europeQuestScores", JSON.stringify(scores));
+        console.log("✅ Guardado correctamente en la nube");
+
     } catch (err) {
-        console.error("Guardado en local:", err);
+        console.error("❌ No se pudo guardar en nube:", err);
+        // Respaldo local
         const scores = JSON.parse(localStorage.getItem("europeQuestScores") || "[]");
-        const existing = scores.find(p => p.name.toLowerCase() === name.toLowerCase());
-        if (existing) {
-            existing.maxLevel = Math.max(existing.maxLevel, maxLevel);
-            existing.points = Math.max(existing.points, totalPoints);
-        } else scores.push({ name: name.trim(), maxLevel, points: totalPoints });
+        const existingIndex = scores.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+        const newEntry = { name: name.trim(), maxLevel: Number(maxLevel) || 0, points: Number(totalPoints) || 0 };
+        if (existingIndex >= 0) {
+            if (newEntry.maxLevel > scores[existingIndex].maxLevel ||
+                (newEntry.maxLevel === scores[existingIndex].maxLevel && newEntry.points > scores[existingIndex].points)) {
+                scores[existingIndex] = newEntry;
+            }
+        } else {
+            scores.push(newEntry);
+        }
         scores.sort((a, b) => b.maxLevel - a.maxLevel || b.points - a.points);
         localStorage.setItem("europeQuestScores", JSON.stringify(scores));
     }
 }
 
+// ✅ Muestra tabla sin errores "undefined"
 async function renderScores() {
     const tbody = document.getElementById("scoresBody");
     tbody.innerHTML = `<tr><td colspan="4">Cargando...</td></tr>`;
+
     try {
         const scores = await loadScores();
         tbody.innerHTML = "";
+
         if (scores.length === 0) {
             tbody.innerHTML = `<tr><td colspan="4">No hay puntuaciones todavía</td></tr>`;
             return;
         }
-        scores.forEach((player, i) => {
-            const pos = i + 1;
+
+        scores.forEach((player, index) => {
+            const pos = index + 1;
             const medal = pos === 1 ? "🥇" : pos === 2 ? "🥈" : pos === 3 ? "🥉" : "";
+            const lvl = Number(player.maxLevel) || 0;
+            const pts = Number(player.points) || 0;
+
             const row = document.createElement("tr");
-            row.innerHTML = `<td>${medal} ${pos}</td><td>${player.name}</td><td>Nivel ${player.maxLevel}</td><td>${player.points} pts</td>`;
+            row.innerHTML = `
+                <td>${medal} ${pos}</td>
+                <td>${player.name}</td>
+                <td>Level ${lvl}</td>
+                <td>${pts} pts</td>
+            `;
             tbody.appendChild(row);
         });
+
     } catch (err) {
         tbody.innerHTML = `<tr><td colspan="4">Error al cargar</td></tr>`;
+        console.error(err);
     }
 }
 
 function startGame() {
     const name = document.getElementById("playerName").value.trim();
-    if (!name) return alert("Escribe tu nombre");
+    if (!name) return alert("Enter your name first!");
     playerName = name;
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("game").style.display = "block";
@@ -153,10 +200,12 @@ function returnToMenu() {
 function showQuestion(lvl) {
     const q = questions.find(x => x.level === lvl);
     if (!q) return;
+
     document.getElementById("questionText").textContent = q.text;
     const img = document.getElementById("questionImage");
     img.src = q.image;
     img.onerror = () => img.alt = "Imagen no disponible";
+
     const cont = document.getElementById("optionsContainer");
     cont.innerHTML = "";
     shuffleArray(q.options).forEach(opt => {
@@ -165,6 +214,7 @@ function showQuestion(lvl) {
         btn.onclick = () => checkAnswer(opt, q.correct, lvl);
         cont.appendChild(btn);
     });
+
     document.getElementById("questionModal").style.display = "block";
     startTimer();
 }
@@ -173,10 +223,10 @@ function checkAnswer(selected, correct, lvl) {
     clearInterval(timer);
     if (selected === correct) {
         points += 10;
-        alert("✅ Correcto!");
+        alert("✅ Correct!");
         if (lvl === currentLevel) currentLevel++;
         if (lvl === 10) {
-            saveScore(playerName, 10, points);
+            saveScore(playerName, currentLevel, points);
             document.getElementById("finalScore").textContent = points;
             document.getElementById("questionModal").style.display = "none";
             document.getElementById("victoryModal").style.display = "block";
@@ -184,10 +234,10 @@ function checkAnswer(selected, correct, lvl) {
         }
     } else {
         lives--;
-        alert("❌ Incorrecto!");
+        alert("❌ Wrong!");
         if (lives <= 0) {
             saveScore(playerName, currentLevel - 1, points);
-            alert(`Fin del juego. Puntuación: ${points}`);
+            alert(`Game Over! Score: ${points}`);
             returnToMenu();
             return;
         }
@@ -221,7 +271,7 @@ window.addEventListener("load", () => {
         el.addEventListener("click", () => {
             const lvl = parseInt(el.dataset.level);
             if (lvl === currentLevel) showQuestion(lvl);
-            else if (lvl > currentLevel) alert(`Completa el nivel ${currentLevel} primero`);
+            else if (lvl > currentLevel) alert(`🔒 Complete level ${currentLevel} first!`);
         });
     });
 });
