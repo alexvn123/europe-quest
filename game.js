@@ -1,6 +1,6 @@
 // ---------------- CONFIGURACIÓN ----------------
 const GIST_ID = "9e578094f485cb35ff0b76f37c5cb5b6";
-const GIST_FILENAME = "europe-quest-ranking";
+const GIST_FILENAME = "europe-quest-ranking.json";
 const GITHUB_TOKEN = "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";
 
 let playerName = "";
