@@ -3,7 +3,7 @@ let points = 0;
 let lives = 3;
 let currentLevel = 1;
 let timer = null;
-const TIME_LIMIT = 10;
+const TIME_LIMIT = 15;
 
 const questions = [
     {
@@ -78,7 +78,7 @@ const questions = [
     }
 ];
 
-// ✅ FUNCIÓN QUE MEZCLA LAS RESPUESTAS CADA VEZ QUE SE ABRE LA PREGUNTA
+// Mezclar respuestas aleatoriamente cada vez
 function mezclarAleatorio(arr) {
   let copia = [...arr];
   for (let i = copia.length - 1; i > 0; i--) {
@@ -88,10 +88,15 @@ function mezclarAleatorio(arr) {
   return copia;
 }
 
-// Sistema de puntuaciones
+// --- SISTEMA DE PUNTUACIONES FUNCIONANDO ---
 function loadAllPlayers() {
-    const saved = localStorage.getItem("europeQuestPlayers");
-    return saved ? JSON.parse(saved) : [];
+    try {
+        const saved = localStorage.getItem("europeQuestPlayers");
+        return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+        console.error("Error loading scores:", e);
+        return [];
+    }
 }
 
 function savePlayerProgress(name, maxLevel, bestScore) {
@@ -107,6 +112,7 @@ function savePlayerProgress(name, maxLevel, bestScore) {
         players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
     }
 
+    // Ordenar por nivel y luego por puntuación
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
     localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
@@ -133,7 +139,7 @@ function renderScores() {
     });
 }
 
-// Lógica del juego
+// --- LÓGICA DEL JUEGO ---
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
     if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
@@ -154,7 +160,7 @@ function returnToStart() { clearInterval(timer);
 }
 
 function openScores() {
-    renderScores();
+    renderScores(); // Carga y muestra datos
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('scoresScreen').style.display = 'block';
 }
@@ -196,10 +202,10 @@ function showQuestion(question) {
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
 
-    // ✅ AQUÍ SE APLICA: CADA VEZ QUE ABRES LA PREGUNTA, LAS OPCIONES SE MEZCLAN
-    const opcionesEnOrdenNuevo = mezclarAleatorio(question.options);
+    // Opciones en orden aleatorio cada vez
+    const opcionesDesordenadas = mezclarAleatorio(question.options);
 
-    opcionesEnOrdenNuevo.forEach(option => {
+    opcionesDesordenadas.forEach(option => {
         const div = document.createElement('div');
         div.className = 'option';
         div.textContent = option;
@@ -216,23 +222,26 @@ function checkAnswer(selected, correctAnswer, levelNumber) {
     const soundWrong = document.getElementById('wrongSound');
 
     if (selected === correctAnswer) {
-        points += 10; soundCorrect.play().catch(()=>{});
+        points += 10;
+        soundCorrect.play().catch(()=>{});
         alert("✅ Correct!");
         if (levelNumber === currentLevel && currentLevel < 10) currentLevel++;
         if (levelNumber === 10) {
-            savePlayerProgress(playerName,10,points);
+            savePlayerProgress(playerName, 10, points);
             document.getElementById('finalScore').textContent = points;
             document.getElementById('questionModal').style.display='none';
             document.getElementById('victoryScreen').style.display='block';
             return;
         }
     } else {
-        lives -= 1; soundWrong.play().catch(()=>{});
+        lives -= 1;
+        soundWrong.play().catch(()=>{});
         alert("❌ Wrong or time's up!");
         if (lives <= 0) {
-            savePlayerProgress(playerName, currentLevel-1, points);
+            savePlayerProgress(playerName, currentLevel - 1, points);
             alert(`💀 Game Over! Final score: ${points}`);
-            returnToStart(); return;
+            returnToStart();
+            return;
         }
     }
     updateInfo(); updateLevelsState(); closeQuestion();
