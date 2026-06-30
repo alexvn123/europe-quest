@@ -3,15 +3,15 @@ let points = 0;
 let lives = 3;
 let currentLevel = 1;
 let timer = null;
-const TIME_LIMIT = 10;
+const TIME_LIMIT = 15;
 
 const questions = [
     {
         level: 1,
         text: "In which hemisphere is Europe located?",
         image: "imagenes/europe-countries.jpg",
-        options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Eastern", "D) Western"],
-        correct: "B) Northern Hemisphere"
+        options: ["A) Southern Hemesphere", "B) Northern Hemesphere", "C) Eastern", "D) Western"],
+        correct: "B) Northern Hemesphere"
     },
     {
         level: 2,
@@ -46,7 +46,7 @@ const questions = [
         text: "Which civilization greatly influenced European culture?",
         image: "imagenes/colosseum.jpg",
         options: ["A) Roman Empire", "B) Mayan", "C) Inca", "D) Aztec"],
-        correct: "A) Roman"
+        correct: "A) Roman Empire"
     },
     {
         level: 7,
@@ -66,19 +66,29 @@ const questions = [
         level: 9,
         text: "Europe has more than...",
         image: "imagenes/berlin.jpg",
-        options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 30 countries"],
+        options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 60 countries"],
         correct: "C) 40 countries"
     },
     {
         level: 10,
         text: "What do the stars on the EU flag represent?",
         image: "imagenes/eu-flag.jpg",
-        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity and Harmony"],
-        correct: "D) Unity and Harmony"
+        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"],
+        correct: "D) Unity"
     }
 ];
 
-// --- SCORE SYSTEM ---
+// ✅ NUEVA: Función para mezclar respuestas al azar
+function mezclarAleatorio(arr) {
+  let copia = [...arr];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+
+// --- SISTEMA DE PUNTUACIONES ---
 function loadAllPlayers() {
     const saved = localStorage.getItem("europeQuestPlayers");
     return saved ? JSON.parse(saved) : [];
@@ -96,7 +106,6 @@ function savePlayerProgress(name, maxLevel, bestScore) {
     } else {
         players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
     }
-
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
     localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
@@ -105,31 +114,21 @@ function renderScores() {
     const players = loadAllPlayers();
     const tbody = document.getElementById("scoresBody");
     tbody.innerHTML = "";
-
     if (players.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4">No players have played yet</td></tr>`;
         return;
     }
-
     players.forEach((p, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${p.name}</td>
-            <td>${p.maxLevel}</td>
-            <td>${p.bestScore}</td>
-        `;
+        row.innerHTML = `<td>${index + 1}</td><td>${p.name}</td><td>${p.maxLevel}</td><td>${p.bestScore}</td>`;
         tbody.appendChild(row);
     });
 }
 
-// --- GAME LOGIC ---
+// --- JUEGO ---
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
-    if (!playerName) {
-        alert("⚠️ Please enter your name first!");
-        return;
-    }
+    if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('game').style.display = 'block';
     document.getElementById('displayName').textContent = playerName;
@@ -137,25 +136,19 @@ function startGame() {
 }
 
 function resetProgress() {
-    points = 0;
-    lives = 3;
-    currentLevel = 1;
-    updateInfo();
-    updateLevelsState();
+    points = 0; lives = 3; currentLevel = 1;
+    updateInfo(); updateLevelsState();
 }
 
-function returnToStart() {
-    clearInterval(timer);
+function returnToStart() { clearInterval(timer);
     document.getElementById('game').style.display = 'none';
     document.getElementById('startScreen').style.display = 'flex';
 }
 
-function openScores() {
-    renderScores();
+function openScores() { renderScores();
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('scoresScreen').style.display = 'block';
 }
-
 function closeScores() {
     document.getElementById('scoresScreen').style.display = 'none';
     document.getElementById('startScreen').style.display = 'flex';
@@ -180,26 +173,22 @@ function startTimer() {
     document.getElementById('timeLeft').textContent = timeLeft;
     clearInterval(timer);
     timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timeLeft').textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            timeUp();
-        }
+        timeLeft--; document.getElementById('timeLeft').textContent = timeLeft;
+        if (timeLeft <= 0) { clearInterval(timer); timeUp(); }
     }, 1000);
 }
-
-function timeUp() {
-    alert("⏰ Time's up!");
-    checkAnswer(null, null, currentLevel);
-}
+function timeUp() { alert("⏰ Time's up!"); checkAnswer(null,null,currentLevel); }
 
 function showQuestion(question) {
     document.getElementById('questionText').textContent = question.text;
     document.getElementById('questionImage').src = question.image;
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
-    question.options.forEach(option => {
+
+    // ✅ AQUÍ SE APLICA: se muestran ya MEZCLADAS
+    const opcionesDesordenadas = mezclarAleatorio(question.options);
+
+    opcionesDesordenadas.forEach(option => {
         const div = document.createElement('div');
         div.className = 'option';
         div.textContent = option;
@@ -216,38 +205,29 @@ function checkAnswer(selected, correctAnswer, levelNumber) {
     const soundWrong = document.getElementById('wrongSound');
 
     if (selected === correctAnswer) {
-        points += 10;
-        soundCorrect.play().catch(() => {});
+        points += 10; soundCorrect.play().catch(()=>{});
         alert("✅ Correct!");
-        if (levelNumber === currentLevel && currentLevel < 10) {
-            currentLevel++;
-        }
+        if (levelNumber === currentLevel && currentLevel < 10) currentLevel++;
         if (levelNumber === 10) {
-            savePlayerProgress(playerName, 10, points);
+            savePlayerProgress(playerName,10,points);
             document.getElementById('finalScore').textContent = points;
-            document.getElementById('questionModal').style.display = 'none';
-            document.getElementById('victoryScreen').style.display = 'block';
+            document.getElementById('questionModal').style.display='none';
+            document.getElementById('victoryScreen').style.display='block';
             return;
         }
     } else {
-        lives -= 1;
-        soundWrong.play().catch(() => {});
+        lives -= 1; soundWrong.play().catch(()=>{});
         alert("❌ Wrong or time's up!");
         if (lives <= 0) {
-            savePlayerProgress(playerName, currentLevel - 1, points);
+            savePlayerProgress(playerName, currentLevel-1, points);
             alert(`💀 Game Over! Final score: ${points}`);
-            returnToStart();
-            return;
+            returnToStart(); return;
         }
     }
-
-    updateInfo();
-    updateLevelsState();
-    closeQuestion();
+    updateInfo(); updateLevelsState(); closeQuestion();
 }
 
-function closeQuestion() {
-    clearInterval(timer);
+function closeQuestion() { clearInterval(timer);
     document.getElementById('questionModal').style.display = 'none';
 }
 
@@ -256,10 +236,10 @@ window.addEventListener('load', () => {
         level.addEventListener('click', () => {
             const num = parseInt(level.dataset.level);
             if (num === currentLevel) {
-                const question = questions.find(q => q.level === num);
-                if (question) showQuestion(question);
+                const q = questions.find(x => x.level === num);
+                if (q) showQuestion(q);
             } else if (num > currentLevel) {
-                alert(`🔒 Level ${num} is locked! Complete level ${currentLevel} first.`);
+                alert(`🔒 Level ${num} locked — finish ${currentLevel} first`);
             }
         });
     });
