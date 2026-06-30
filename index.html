@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- START SCREEN -->
     <div id="startScreen" class="start-screen">
         <h1>EUROPE QUEST</h1>
         <p>Answer correctly to advance through your adventure</p>
@@ -16,9 +15,7 @@
         <button onclick="openScores()" class="scores-button">VIEW ALL SCORES</button>
     </div>
 
-    <!-- MAIN GAME -->
     <div id="game" class="game" style="display: none;">
-        <!-- Top Panel -->
         <div class="top-panel">
             <div class="player">👤 Player: <span id="displayName">Guest</span></div>
             <div class="points">⭐ Points: <span id="points">0</span></div>
@@ -26,17 +23,12 @@
             <div class="timer">⏱️ Time: <span id="timeLeft">15</span>s</div>
         </div>
 
-        <!-- MAP WITH BACKGROUND IMAGE -->
         <div class="map-container">
             <img src="imagenes/euro-map.jpg" alt="Europe Map" class="background-map">
-
-            <!-- Golden Path following your sequence -->
             <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <path d="M 20 18 L 70 18 L 70 32 L 20 32 L 20 46 L 70 46 L 70 60 L 20 60 L 20 74 L 70 74" 
                       fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
             </svg>
-
-            <!-- Levels in exact order -->
             <div class="level locked" data-level="1" style="top: 18%; left: 20%;">1</div>
             <div class="level locked" data-level="2" style="top: 18%; left: 70%;">2</div>
             <div class="level locked" data-level="3" style="top: 32%; left: 70%;">3</div>
@@ -49,7 +41,6 @@
             <div class="level locked" data-level="10" style="top: 74%; left: 70%;">10</div>
         </div>
 
-        <!-- Question Window -->
         <div id="questionModal" class="question-modal">
             <h3 id="questionText"></h3>
             <img id="questionImage" src="" alt="Question image" class="question-image">
@@ -57,7 +48,6 @@
             <button onclick="closeQuestion()">Close</button>
         </div>
 
-        <!-- 🎉 Victory Screen -->
         <div id="victoryScreen" class="victory-modal">
             <h2>🏆 CONGRATULATIONS! YOU WON!</h2>
             <img src="imagenes/europe-countries.jpg" alt="Victory" class="victory-image">
@@ -66,32 +56,20 @@
             <button onclick="returnToStart()">Back to Menu</button>
         </div>
 
-        <!-- 🏆 Scores Screen -->
         <div id="scoresScreen" class="scores-modal">
             <h2>🏆 ALL PLAYERS PROGRESS</h2>
             <table id="scoresTable">
                 <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Player</th>
-                        <th>Max Level</th>
-                        <th>Best Score</th>
-                    </tr>
+                    <tr><th>Rank</th><th>Player</th><th>Max Level</th><th>Best Score</th></tr>
                 </thead>
                 <tbody id="scoresBody"></tbody>
             </table>
             <button onclick="closeScores()">Back to Menu</button>
         </div>
 
-        <!-- Sounds -->
-        <audio id="correctSound" preload="auto">
-            <source src="sounds/correct.mp3" type="audio/mpeg">
-        
-        <audio id="wrongSound" preload="auto">
-            <source src="sounds/wrong.mp3" type="audio/mpeg">
-        
+        <audio id="correctSound" preload="auto"><source src="sounds/correct.mp3" type="audio/mpeg">
+        <audio id="wrongSound" preload="auto"><source src="sounds/wrong.mp3" type="audio/mpeg">
     </div>
-
     <script src="game.js"></script>
 </body>
 </html>
