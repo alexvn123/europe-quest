@@ -10,15 +10,15 @@ const questions = [
         level: 1,
         text: "In which hemisphere is Europe located?",
         image: "imagenes/europe-countries.jpg",
-        options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"],
-        correct: "B) Northern"
+        options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Eastern", "D) Western"],
+        correct: "B) Northern Hemisphere"
     },
     {
         level: 2,
         text: "Which ocean lies to the west of Europe?",
         image: "imagenes/atlantic-ocean.jpg",
-        options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"],
-        correct: "C) Atlantic"
+        options: ["A) Pacific Ocean", "B) Indian Ocean", "C) Atlantic Ocean", "D) Arctic Ocean"],
+        correct: "C) Atlantic Ocean"
     },
     {
         level: 3,
@@ -45,7 +45,7 @@ const questions = [
         level: 6,
         text: "Which civilization greatly influenced European culture?",
         image: "imagenes/colosseum.jpg",
-        options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"],
+        options: ["A) Roman Empire", "B) Mayan", "C) Inca", "D) Aztec"],
         correct: "A) Roman"
     },
     {
@@ -64,34 +64,39 @@ const questions = [
     },
     {
         level: 9,
-        text: "What is the capital city of Germany?",
+        text: "Europe has more than...",
         image: "imagenes/berlin.jpg",
-        options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"],
-        correct: "C) Berlin"
+        options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 30 countries"],
+        correct: "C) 40 countries"
     },
     {
         level: 10,
         text: "What do the stars on the EU flag represent?",
         image: "imagenes/eu-flag.jpg",
-        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"],
-        correct: "D) Unity"
+        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity and Harmony"],
+        correct: "D) Unity and Harmony"
     }
 ];
 
+// --- SCORE SYSTEM ---
 function loadAllPlayers() {
     const saved = localStorage.getItem("europeQuestPlayers");
     return saved ? JSON.parse(saved) : [];
 }
 
 function savePlayerProgress(name, maxLevel, bestScore) {
+    if (!name) return;
     const players = loadAllPlayers();
-    const existing = players.find(p => p.name.trim().toLowerCase() === name.trim().toLowerCase());
+    const nameTrim = name.trim();
+    const existing = players.find(p => p.name.toLowerCase() === nameTrim.toLowerCase());
+
     if (existing) {
         if (maxLevel > existing.maxLevel) existing.maxLevel = maxLevel;
         if (bestScore > existing.bestScore) existing.bestScore = bestScore;
     } else {
-        players.push({ name: name.trim(), maxLevel: maxLevel, bestScore: bestScore });
+        players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
     }
+
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
     localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
@@ -100,20 +105,31 @@ function renderScores() {
     const players = loadAllPlayers();
     const tbody = document.getElementById("scoresBody");
     tbody.innerHTML = "";
+
     if (players.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4">No players yet</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4">No players have played yet</td></tr>`;
         return;
     }
-    players.forEach((p, i) => {
+
+    players.forEach((p, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `<td>${i + 1}</td><td>${p.name}</td><td>Level ${p.maxLevel}</td><td>${p.bestScore}</td>`;
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${p.name}</td>
+            <td>${p.maxLevel}</td>
+            <td>${p.bestScore}</td>
+        `;
         tbody.appendChild(row);
     });
 }
 
+// --- GAME LOGIC ---
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
-    if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
+    if (!playerName) {
+        alert("⚠️ Please enter your name first!");
+        return;
+    }
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('game').style.display = 'block';
     document.getElementById('displayName').textContent = playerName;
@@ -166,7 +182,10 @@ function startTimer() {
     timer = setInterval(() => {
         timeLeft--;
         document.getElementById('timeLeft').textContent = timeLeft;
-        if (timeLeft <= 0) { clearInterval(timer); timeUp(); }
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            timeUp();
+        }
     }, 1000);
 }
 
@@ -195,11 +214,14 @@ function checkAnswer(selected, correctAnswer, levelNumber) {
     clearInterval(timer);
     const soundCorrect = document.getElementById('correctSound');
     const soundWrong = document.getElementById('wrongSound');
+
     if (selected === correctAnswer) {
         points += 10;
         soundCorrect.play().catch(() => {});
         alert("✅ Correct!");
-        if (levelNumber === currentLevel && currentLevel < 10) currentLevel++;
+        if (levelNumber === currentLevel && currentLevel < 10) {
+            currentLevel++;
+        }
         if (levelNumber === 10) {
             savePlayerProgress(playerName, 10, points);
             document.getElementById('finalScore').textContent = points;
@@ -218,6 +240,7 @@ function checkAnswer(selected, correctAnswer, levelNumber) {
             return;
         }
     }
+
     updateInfo();
     updateLevelsState();
     closeQuestion();
