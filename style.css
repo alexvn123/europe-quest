@@ -191,6 +191,16 @@ body {
     font-style: italic;
 }
 
+/* ✅ Estilo para la imagen de puntuaciones */
+.scores-banner {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 2px solid #d4af37;
+}
+
 .question-image, .victory-image {
     width: 100%;
     height: 190px;
