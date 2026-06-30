@@ -28,7 +28,7 @@ body {
     font-size: 3rem;
     color: #ffd700;
     text-shadow: 0 0 15px rgba(255,215,0,0.6);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .start-screen p {
@@ -69,9 +69,9 @@ body {
 }
 
 .scores-button {
-    background: #2e7d32;
+    background: #2563eb;
     color: #ffffff;
-    box-shadow: 0 0 15px rgba(46,125,50,0.5);
+    box-shadow: 0 0 15px rgba(37,99,235,0.5);
 }
 
 .play-button:hover, .scores-button:hover {
@@ -166,7 +166,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 92%;
-    max-width: 480px;
+    max-width: 550px;
     padding: 2rem;
     background: #ffffff;
     color: #0f172a;
@@ -176,11 +176,19 @@ body {
     z-index: 20;
     text-align: center;
     border: 3px solid #d4af37;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .question-modal h3, .victory-modal h2, .scores-modal h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.8rem;
     color: #1e293b;
+}
+
+.scores-subtitle {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    font-style: italic;
 }
 
 .question-image, .victory-image {
@@ -231,14 +239,20 @@ button:hover {
     background: #1e293b;
 }
 
+.back-button {
+    background: #2563eb;
+    margin-top: 2rem;
+}
+
 #scoresTable {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
+    font-size: 1rem;
 }
 
 #scoresTable th, #scoresTable td {
-    padding: 12px;
+    padding: 14px 10px;
     border: 1px solid #e2e8f0;
     text-align: center;
 }
@@ -246,8 +260,17 @@ button:hover {
 #scoresTable th {
     background: #0f172a;
     color: #ffffff;
+    font-weight: bold;
 }
 
 #scoresTable tr:nth-child(even) {
     background: #f8fafc;
+}
+
+#scoresTable tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+#scoresTable tr:hover {
+    background: #fef3c7;
 }
