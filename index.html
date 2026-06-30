@@ -19,18 +19,14 @@
     <!-- Main Game -->
     <div id="game" class="game" style="display: none;">
         <div class="top-panel">
-            <div class="player">👤 Player: <span id="displayName">Guest</span></div>
-            <div class="points">⭐ Points: <span id="points">0</span></div>
-            <div class="lives">❤️ Lives: <span id="lives">3</span></div>
-            <div class="timer">⏱️ Time: <span id="timeLeft">15</span>s</div>
+            <div>👤 Player: <span id="displayName">Guest</span></div>
+            <div>⭐ Points: <span id="points">0</span></div>
+            <div>❤️ Lives: <span id="lives">3</span></div>
+            <div>⏱️ Time: <span id="timeLeft">15</span>s</div>
         </div>
 
         <div class="map-container">
-            <img src="imagenes/euro-map.jpg" alt="Europe Map" class="background-map">
-            <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M 20 18 L 70 18 L 70 32 L 20 32 L 20 46 L 70 46 L 70 60 L 20 60 L 20 74 L 70 74" 
-                      fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
-            </svg>
+            <img src="imagenes/europe-quest-map.jpg" alt="Map" class="background-map">
             <div class="level locked" data-level="1" style="top: 18%; left: 20%;">1</div>
             <div class="level locked" data-level="2" style="top: 18%; left: 70%;">2</div>
             <div class="level locked" data-level="3" style="top: 32%; left: 70%;">3</div>
@@ -44,52 +40,41 @@
         </div>
 
         <!-- Question Modal -->
-        <div id="questionModal" class="question-modal">
+        <div id="questionModal" class="modal">
             <h3 id="questionText"></h3>
-            <img id="questionImage" src="" alt="Question image" class="question-image">
-            <div id="optionsContainer" class="options"></div>
+            <img id="questionImage" alt="Question" class="modal-img">
+            <div id="optionsContainer"></div>
             <button onclick="closeQuestion()">Close</button>
         </div>
 
-        <!-- Victory Screen -->
-        <div id="victoryScreen" class="victory-modal">
-            <h2>🏆 CONGRATULATIONS! YOU WON!</h2>
-            <img src="imagenes/europe-countries.jpg" alt="Victory" class="victory-image">
-            <p>You have completed all 10 levels!</p>
+        <!-- Victory Modal -->
+        <div id="victoryModal" class="modal">
+            <h2>🏆 CONGRATULATIONS!</h2>
             <p>Final Score: <strong id="finalScore"></strong></p>
-            <button onclick="returnToStart()">Back to Menu</button>
+            <button onclick="returnToMenu()">Back to Menu</button>
         </div>
 
-        <!-- ✅ INTERFAZ DE PUNTUACIONES CON IMAGEN -->
-        <div id="scoresScreen" class="scores-modal">
-            <!-- Imagen para la tabla de puntuaciones -->
-            <img src="imagenes/ranking-banner.jpg" alt="Ranking Banner" class="scores-banner">
-            
+        <!-- 📊 TABLA DE PUNTUACIÓN CON MEDALLAS -->
+        <div id="scoresModal" class="scores-modal">
             <h2>🏆 PLAYERS SCORES</h2>
-            <p class="scores-subtitle">List of saved results</p>
-            
+            <p class="subtitle">Best results saved</p>
+
             <table id="scoresTable">
                 <thead>
                     <tr>
-                        <th>Position</th>
+                        <th>Pos</th>
                         <th>Player Name</th>
                         <th>Max Level</th>
                         <th>Total Points</th>
                     </tr>
                 </thead>
-                <tbody id="scoresBody"></tbody>
+                <tbody id="scoresBody">
+                    <!-- Datos se cargan automáticamente aquí -->
+                </tbody>
             </table>
-            
-            <button onclick="closeScores()" class="back-button">Back to Main Menu</button>
-        </div>
 
-        <!-- Sounds -->
-        <audio id="correctSound" preload="auto">
-            <source src="sounds/correct.mp3" type="audio/mpeg">
-        
-        <audio id="wrongSound" preload="auto">
-            <source src="sounds/wrong.mp3" type="audio/mpeg">
-        
+            <button onclick="closeScores()" class="back-btn">Back to Menu</button>
+        </div>
     </div>
 
     <script src="game.js"></script>
