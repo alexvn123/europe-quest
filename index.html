@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Start Screen -->
+    <!-- Pantalla de inicio -->
     <div id="startScreen" class="start-screen">
         <h1>EUROPE QUEST</h1>
         <p>Answer correctly to advance through your adventure</p>
@@ -16,7 +16,7 @@
         <button onclick="openScores()" class="scores-button">VIEW ALL SCORES</button>
     </div>
 
-    <!-- Main Game -->
+    <!-- Pantalla del juego -->
     <div id="game" class="game" style="display: none;">
         <div class="top-panel">
             <div>👤 Player: <span id="displayName">Guest</span></div>
@@ -25,36 +25,37 @@
             <div>⏱️ Time: <span id="timeLeft">15</span>s</div>
         </div>
 
+        <!-- Mapa con posiciones CORREGIDAS según tu imagen -->
         <div class="map-container">
-            <img src="imagenes/euro-map.jpg" alt="Map" class="background-map">
-            <div class="level locked" data-level="1" style="top: 18%; left: 20%;">1</div>
-            <div class="level locked" data-level="2" style="top: 18%; left: 70%;">2</div>
-            <div class="level locked" data-level="3" style="top: 32%; left: 70%;">3</div>
-            <div class="level locked" data-level="4" style="top: 32%; left: 20%;">4</div>
-            <div class="level locked" data-level="5" style="top: 46%; left: 20%;">5</div>
-            <div class="level locked" data-level="6" style="top: 46%; left: 70%;">6</div>
-            <div class="level locked" data-level="7" style="top: 60%; left: 70%;">7</div>
-            <div class="level locked" data-level="8" style="top: 60%; left: 20%;">8</div>
-            <div class="level locked" data-level="9" style="top: 74%; left: 20%;">9</div>
-            <div class="level locked" data-level="10" style="top: 74%; left: 70%;">10</div>
+            <img src="imagenes/europe-quest-map.jpg" alt="Map" class="background-map">
+            <div class="level locked" data-level="1" style="top: 26%; left: 14%;">1</div>
+            <div class="level locked" data-level="2" style="top: 29%; left: 82%;">2</div>
+            <div class="level locked" data-level="3" style="top: 39%; left: 82%;">3</div>
+            <div class="level locked" data-level="4" style="top: 40%; left: 14%;">4</div>
+            <div class="level locked" data-level="5" style="top: 49%; left: 14%;">5</div>
+            <div class="level locked" data-level="6" style="top: 52%; left: 82%;">6</div>
+            <div class="level locked" data-level="7" style="top: 61%; left: 82%;">7</div>
+            <div class="level locked" data-level="8" style="top: 64%; left: 14%;">8</div>
+            <div class="level locked" data-level="9" style="top: 73%; left: 14%;">9</div>
+            <div class="level locked" data-level="10" style="top: 76%; left: 82%;">10</div>
         </div>
 
-        <!-- Question Modal -->
+        <!-- Modal de preguntas -->
         <div id="questionModal" class="modal">
             <h3 id="questionText"></h3>
             <img id="questionImage" alt="Question" class="modal-img">
             <div id="optionsContainer"></div>
-            <button onclick="closeQuestion()">Close</button>
+            <button onclick="closeQuestion()" class="modal-btn">Close</button>
         </div>
 
-        <!-- Victory Modal -->
+        <!-- Modal de victoria -->
         <div id="victoryModal" class="modal">
             <h2>🏆 CONGRATULATIONS!</h2>
             <p>Final Score: <strong id="finalScore"></strong></p>
-            <button onclick="returnToMenu()">Back to Menu</button>
+            <button onclick="returnToMenu()" class="modal-btn">Back to Menu</button>
         </div>
 
-        <!-- 📊 TABLA DE PUNTUACIÓN CON MEDALLAS -->
+        <!-- Modal de puntuaciones -->
         <div id="scoresModal" class="scores-modal">
             <h2>🏆 PLAYERS SCORES</h2>
             <p class="subtitle">Best results saved</p>
@@ -68,9 +69,7 @@
                         <th>Total Points</th>
                     </tr>
                 </thead>
-                <tbody id="scoresBody">
-                    <!-- Datos se cargan automáticamente aquí -->
-                </tbody>
+                <tbody id="scoresBody"></tbody>
             </table>
 
             <button onclick="closeScores()" class="back-btn">Back to Menu</button>
