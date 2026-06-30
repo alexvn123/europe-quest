@@ -60,21 +60,22 @@
             <button onclick="returnToStart()">Back to Menu</button>
         </div>
 
-        <!-- Scores Screen -->
+        <!-- Scores Interface -->
         <div id="scoresScreen" class="scores-modal">
-            <h2>🏆 ALL PLAYERS PROGRESS</h2>
+            <h2>🏆 RANKING OF PLAYERS</h2>
+            <p class="scores-subtitle">Best progress and scores</p>
             <table id="scoresTable">
                 <thead>
                     <tr>
                         <th>Rank</th>
-                        <th>Player</th>
+                        <th>Player Name</th>
                         <th>Max Level</th>
                         <th>Best Score</th>
                     </tr>
                 </thead>
                 <tbody id="scoresBody"></tbody>
             </table>
-            <button onclick="closeScores()">Back to Menu</button>
+            <button onclick="closeScores()" class="back-button">Back to Main Menu</button>
         </div>
 
         <!-- Sounds -->
