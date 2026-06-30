@@ -26,7 +26,7 @@
         </div>
 
         <div class="map-container">
-            <img src="imagenes/euro-map.jpg" alt="Europe Map" class="background-map">
+            <img src="imagenes/europe-quest-map.jpg" alt="Europe Map" class="background-map">
             <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <path d="M 20 18 L 70 18 L 70 32 L 20 32 L 20 46 L 70 46 L 70 60 L 20 60 L 20 74 L 70 74" 
                       fill="none" stroke="#ffd700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px rgba(255,215,0,0.7))" />
@@ -60,10 +60,14 @@
             <button onclick="returnToStart()">Back to Menu</button>
         </div>
 
-        <!-- Scores Interface -->
+        <!-- ✅ INTERFAZ DE PUNTUACIONES CON IMAGEN -->
         <div id="scoresScreen" class="scores-modal">
+            <!-- Imagen para la tabla de puntuaciones -->
+            <img src="imagenes/ranking-banner.jpg" alt="Ranking Banner" class="scores-banner">
+            
             <h2>🏆 PLAYERS SCORES</h2>
             <p class="scores-subtitle">List of saved results</p>
+            
             <table id="scoresTable">
                 <thead>
                     <tr>
@@ -75,6 +79,7 @@
                 </thead>
                 <tbody id="scoresBody"></tbody>
             </table>
+            
             <button onclick="closeScores()" class="back-button">Back to Main Menu</button>
         </div>
 
