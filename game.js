@@ -12,16 +12,16 @@ const TIME_LIMIT = 9;
 
 // ✅ Rutas de imágenes correctas
 const questions = [
-    { level: 1, text: "In which hemisphere is Europe located?", image: "imagenes/europe-map.jpg", options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"], correct: "B) Northern" },
-    { level: 2, text: "Which ocean is west of Europe?", image: "imagenes/atlantic-ocean.jpg", options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"], correct: "C) Atlantic" },
-    { level: 3, text: "How many stars on EU flag?", image: "imagenes/eu-flag.jpg", options: ["A) 10", "B) 12", "C) 15", "D) 20"], correct: "B) 12" },
-    { level: 4, text: "Most spoken language in Europe?", image: "imagenes/europe-map.jpg", options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"], correct: "A) German" },
-    { level: 5, text: "Pizza and pasta come from?", image: "imagenes/italy.jpg", options: ["A) France", "B) Germany", "C) Italy", "D) Spain"], correct: "C) Italy" },
-    { level: 6, text: "Greatest ancient civilization?", image: "imagenes/colosseum.jpg", options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"], correct: "A) Roman" },
-    { level: 7, text: "Eiffel Tower is in?", image: "imagenes/eiffel-tower.jpg", options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"], correct: "C) France" },
-    { level: 8, text: "Alps mountains are in?", image: "imagenes/alps.jpg", options: ["A) Andes", "B) Europe", "C) Asia", "D) Africa"], correct: "B) Europe" },
-    { level: 9, text: "Capital of Germany?", image: "imagenes/berlin.jpg", options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"], correct: "C) Berlin" },
-    { level: 10, text: "EU stars represent?", image: "imagenes/eu-flag.jpg", options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"], correct: "D) Unity" }
+    { level: 1, text: "Where is Europe located?", image: "imagenes/europe-map.jpg", options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Eastern", "D) Western"], correct: "B) Northern" },
+    { level: 2, text: "What ocean borders Europe to the west?", image: "imagenes/atlantic-ocean.jpg", options: ["A) Pacific ocean", "B) Indian ocean", "C) Atlantic ocean", "D) Arctic ocean"], correct: "C) Atlantic" },
+    { level: 3, text: "how many stars are on the European Union flag?", image: "imagenes/eu-flag.jpg", options: ["A) 10", "B) 12", "C) 15", "D) 20"], correct: "B) 12" },
+    { level: 4, text: "Which language is common in Europe?", image: "imagenes/europe-map.jpg", options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"], correct: "A) German" },
+    { level: 5, text: "Which country is famous for pizza and pasta?", image: "imagenes/italy.jpg", options: ["A) France", "B) Germany", "C) Italy", "D) Spain"], correct: "C) Italy" },
+    { level: 6, text: "Which civilization influenced European philosohy and politics?", image: "imagenes/colosseum.jpg", options: ["A) Roman Empire", "B) Mayan", "C) Inca", "D) Aztec"], correct: "A) Roman Empire" },
+    { level: 7, text: "Where is the Eiffel tower located?", image: "imagenes/eiffel-tower.jpg", options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"], correct: "C) France" },
+    { level: 8, text: "Which mountain is in Europe?", image: "imagenes/alps.jpg", options: ["A) Andes", "B) Europe", "C) Asia", "D) Africa"], correct: "B) Europe" },
+    { level: 9, text: "Europe has more than...", image: "imagenes/berlin.jpg", options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 60 countries"], correct: "C) 40 countries" },
+    { level: 10, text: "what do the stars on the EU flag represent?", image: "imagenes/eu-flag.jpg", options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity and Harmony"], correct: "D) Unity and Harmony" }
 ];
 
 function shuffleArray(arr) {
