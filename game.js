@@ -19,7 +19,7 @@ const questions = [
     { level: 5, text: "Which country is famous for pizza and pasta?", image: "imagenes/italy.jpg", options: ["A) France", "B) Germany", "C) Italy", "D) Spain"], correct: "C) Italy" },
     { level: 6, text: "Which civilization influenced European philosohy and politics?", image: "imagenes/colosseum.jpg", options: ["A) Roman Empire", "B) Mayan", "C) Inca", "D) Aztec"], correct: "A) Roman Empire" },
     { level: 7, text: "Where is the Eiffel tower located?", image: "imagenes/eiffel-tower.jpg", options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"], correct: "C) France" },
-    { level: 8, text: "Which mountain is in Europe?", image: "imagenes/alps.jpg", options: ["A) Andes", "B) Europe", "C) Asia", "D) Africa"], correct: "B) Europe" },
+    { level: 8, text: "Which mountain is in Europe?", image: "imagenes/alps.jpg", options: ["A) Andes", "B) Alps", "C) Himalayas", "D) Rockies"], correct: "B) Alps" },
     { level: 9, text: "Europe has more than...", image: "imagenes/berlin.jpg", options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 60 countries"], correct: "C) 40 countries" },
     { level: 10, text: "what do the stars on the EU flag represent?", image: "imagenes/eu-flag.jpg", options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity and Harmony"], correct: "D) Unity and Harmony" }
 ];
