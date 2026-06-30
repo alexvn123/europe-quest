@@ -13,7 +13,7 @@ const TIME_LIMIT = 9;
 // ✅ Rutas de imágenes correctas
 const questions = [
     { level: 1, text: "Where is Europe located?", image: "imagenes/europe-map.jpg", options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Eastern", "D) Western"], correct: "B) Northern Hemisphere" },
-    { level: 2, text: "What ocean borders Europe to the west?", image: "imagenes/atlantic-ocean.jpg", options: ["A) Pacific ocean", "B) Indian ocean", "C) Atlantic ocean", "D) Arctic ocean"], correct: "C) Atlantic" },
+    { level: 2, text: "What ocean borders Europe to the west?", image: "imagenes/atlantic-ocean.jpg", options: ["A) Pacific ocean", "B) Indian ocean", "C) Atlantic ocean", "D) Arctic ocean"], correct: "C) Atlantic ocean" },
     { level: 3, text: "how many stars are on the European Union flag?", image: "imagenes/eu-flag.jpg", options: ["A) 10", "B) 12", "C) 15", "D) 20"], correct: "B) 12" },
     { level: 4, text: "Which language is common in Europe?", image: "imagenes/europe-map.jpg", options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"], correct: "A) German" },
     { level: 5, text: "Which country is famous for pizza and pasta?", image: "imagenes/italy.jpg", options: ["A) France", "B) Germany", "C) Italy", "D) Spain"], correct: "C) Italy" },
