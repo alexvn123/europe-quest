@@ -1,263 +1,209 @@
-let playerName = "";
-let points = 0;
-let lives = 3;
-let currentLevel = 1;
-let timer = null;
-const TIME_LIMIT = 15;
-
-const questions = [
-    {
-        level: 1,
-        text: "In which hemisphere is Europe located?",
-        image: "imagenes/europe-countries.jpg",
-        options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"],
-        correct: "B) Northern"
-    },
-    {
-        level: 2,
-        text: "Which ocean lies to the west of Europe?",
-        image: "imagenes/atlantic-ocean.jpg",
-        options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"],
-        correct: "C) Atlantic"
-    },
-    {
-        level: 3,
-        text: "How many stars are on the European Union flag?",
-        image: "imagenes/eu-flag.jpg",
-        options: ["A) 10", "B) 12", "C) 15", "D) 20"],
-        correct: "B) 12"
-    },
-    {
-        level: 4,
-        text: "Which language is widely spoken in Europe?",
-        image: "imagenes/european-union.jpg",
-        options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"],
-        correct: "A) German"
-    },
-    {
-        level: 5,
-        text: "Which country is famous for pizza and pasta?",
-        image: "imagenes/italy.jpg",
-        options: ["A) France", "B) Germany", "C) Italy", "D) Spain"],
-        correct: "C) Italy"
-    },
-    {
-        level: 6,
-        text: "Which civilization greatly influenced European culture?",
-        image: "imagenes/colosseum.jpg",
-        options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"],
-        correct: "A) Roman"
-    },
-    {
-        level: 7,
-        text: "In which country is the Eiffel Tower located?",
-        image: "imagenes/eiffel-tower.jpg",
-        options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"],
-        correct: "C) France"
-    },
-    {
-        level: 8,
-        text: "Which mountain range is found in Europe?",
-        image: "imagenes/alps.jpg",
-        options: ["A) Andes", "B) Alps", "C) Rockies", "D) Himalayas"],
-        correct: "B) Alps"
-    },
-    {
-        level: 9,
-        text: "What is the capital city of Germany?",
-        image: "imagenes/berlin.jpg",
-        options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"],
-        correct: "C) Berlin"
-    },
-    {
-        level: 10,
-        text: "What do the stars on the EU flag represent?",
-        image: "imagenes/eu-flag.jpg",
-        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"],
-        correct: "D) Unity"
-    }
-];
-
-// Mezclar respuestas aleatoriamente cada vez
-function mezclarAleatorio(arr) {
-  let copia = [...arr];
-  for (let i = copia.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copia[i], copia[j]] = [copia[j], copia[i]];
-  }
-  return copia;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-// Sistema de puntuaciones
-function loadAllPlayers() {
-    try {
-        const saved = localStorage.getItem("europeQuestPlayers");
-        return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-        console.error("Error loading scores:", e);
-        return [];
-    }
+body {
+    background: #0f172a;
+    color: #fff;
+    overflow: hidden;
 }
 
-function savePlayerProgress(name, maxLevel, bestScore) {
-    if (!name) return;
-    const players = loadAllPlayers();
-    const nameTrim = name.trim();
-    const existing = players.find(p => p.name.toLowerCase() === nameTrim.toLowerCase());
-
-    if (existing) {
-        if (maxLevel > existing.maxLevel) existing.maxLevel = maxLevel;
-        if (bestScore > existing.bestScore) existing.bestScore = bestScore;
-    } else {
-        players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
-    }
-
-    players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
-    localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
+.start-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
 }
 
-function renderScores() {
-    const players = loadAllPlayers();
-    const tbody = document.getElementById("scoresBody");
-    tbody.innerHTML = "";
-
-    if (players.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4">No players have played yet</td></tr>`;
-        return;
-    }
-
-    players.forEach((p, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${p.name}</td>
-            <td>Level ${p.maxLevel}</td>
-            <td>${p.bestScore} pts</td>
-        `;
-        tbody.appendChild(row);
-    });
+.start-screen h1 {
+    color: #ffd700;
+    font-size: 2.5rem;
 }
 
-function startGame() {
-    playerName = document.getElementById('playerName').value.trim();
-    if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('game').style.display = 'block';
-    document.getElementById('displayName').textContent = playerName;
-    resetProgress();
+input {
+    padding: 0.8rem;
+    width: 280px;
+    border-radius: 8px;
+    border: 2px solid #ffd700;
+    background: #1e293b;
+    color: #fff;
+    font-size: 1rem;
 }
 
-function resetProgress() {
-    points = 0; lives = 3; currentLevel = 1;
-    updateInfo(); updateLevelsState();
+button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffd700;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-function returnToStart() { clearInterval(timer);
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('startScreen').style.display = 'flex';
+button:hover {
+    background: #ffcc00;
 }
 
-function openScores() {
-    renderScores();
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('scoresScreen').style.display = 'block';
+.game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
 }
 
-function closeScores() {
-    document.getElementById('scoresScreen').style.display = 'none';
-    document.getElementById('startScreen').style.display = 'flex';
+.top-panel {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background: rgba(0,0,0,0.6);
+    font-size: 1.1rem;
 }
 
-function updateInfo() {
-    document.getElementById('points').textContent = points;
-    document.getElementById('lives').textContent = lives;
-    document.getElementById('timeLeft').textContent = TIME_LIMIT;
+.map-container {
+    width: 100%;
+    height: calc(100vh - 60px);
+    position: relative;
 }
 
-function updateLevelsState() {
-    document.querySelectorAll('.level').forEach(level => {
-        const num = parseInt(level.dataset.level);
-        level.classList.toggle('unlocked', num <= currentLevel);
-        level.classList.toggle('locked', num > currentLevel);
-    });
+.background-map {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-function startTimer() {
-    let timeLeft = TIME_LIMIT;
-    document.getElementById('timeLeft').textContent = timeLeft;
-    clearInterval(timer);
-    timer = setInterval(() => {
-        timeLeft--; document.getElementById('timeLeft').textContent = timeLeft;
-        if (timeLeft <= 0) { clearInterval(timer); timeUp(); }
-    }, 1000);
+.level {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid #ffd700;
+    cursor: not-allowed;
 }
 
-function timeUp() { alert("⏰ Time's up!"); checkAnswer(null,null,currentLevel); }
-
-function showQuestion(question) {
-    document.getElementById('questionText').textContent = question.text;
-    document.getElementById('questionImage').src = question.image;
-    const container = document.getElementById('optionsContainer');
-    container.innerHTML = '';
-
-    const opcionesDesordenadas = mezclarAleatorio(question.options);
-
-    opcionesDesordenadas.forEach(option => {
-        const div = document.createElement('div');
-        div.className = 'option';
-        div.textContent = option;
-        div.onclick = () => checkAnswer(option, question.correct, question.level);
-        container.appendChild(div);
-    });
-    document.getElementById('questionModal').style.display = 'block';
-    startTimer();
+.level.unlocked {
+    background: #ffd700;
+    color: #000;
+    cursor: pointer;
 }
 
-function checkAnswer(selected, correctAnswer, levelNumber) {
-    clearInterval(timer);
-    const soundCorrect = document.getElementById('correctSound');
-    const soundWrong = document.getElementById('wrongSound');
-
-    if (selected === correctAnswer) {
-        points += 10;
-        soundCorrect.play().catch(()=>{});
-        alert("✅ Correct!");
-        if (levelNumber === currentLevel && currentLevel < 10) currentLevel++;
-        if (levelNumber === 10) {
-            savePlayerProgress(playerName, 10, points);
-            document.getElementById('finalScore').textContent = points;
-            document.getElementById('questionModal').style.display='none';
-            document.getElementById('victoryScreen').style.display='block';
-            return;
-        }
-    } else {
-        lives -= 1;
-        soundWrong.play().catch(()=>{});
-        alert("❌ Wrong or time's up!");
-        if (lives <= 0) {
-            savePlayerProgress(playerName, currentLevel - 1, points);
-            alert(`💀 Game Over! Final score: ${points}`);
-            returnToStart();
-            return;
-        }
-    }
-    updateInfo(); updateLevelsState(); closeQuestion();
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    color: #0f172a;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    display: none;
+    text-align: center;
 }
 
-function closeQuestion() { clearInterval(timer);
-    document.getElementById('questionModal').style.display = 'none';
+/* ✅ Interfaz con fondo de imagen */
+.scores-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: url("imagenes/ranking-banner.jpg") center / cover no-repeat;
+    background-color: rgba(0, 0, 0, 0.75);
+    background-blend-mode: darken;
+    color: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    display: none;
+    text-align: center;
 }
 
-window.addEventListener('load', () => {
-    document.querySelectorAll('.level').forEach(level => {
-        level.addEventListener('click', () => {
-            const num = parseInt(level.dataset.level);
-            if (num === currentLevel) {
-                const q = questions.find(x => x.level === num);
-                if (q) showQuestion(q);
-            } else if (num > currentLevel) {
-                alert(`🔒 Level ${num} locked — finish ${currentLevel} first`);
-            }
-        });
-    });
-});
+.scores-modal h2 {
+    color: #ffd700;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.subtitle {
+    margin-bottom: 1.5rem;
+    color: #e2e8f0;
+    font-style: italic;
+}
+
+/* 🎨 Estilo de tabla con medallas */
+#scoresTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.8rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#scoresTable th,
+#scoresTable td {
+    padding: 12px 8px;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    text-align: center;
+}
+
+#scoresTable th {
+    background: #0f172a;
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Resaltar filas de los primeros puestos */
+#scoresTable tr:nth-child(1) {
+    background: #fffbeb;
+    font-weight: bold;
+}
+
+#scoresTable tr:nth-child(2) {
+    background: #f8fafc;
+}
+
+#scoresTable tr:nth-child(3) {
+    background: #f1f5f9;
+}
+
+#scoresTable tr:hover {
+    background: #fffbeb;
+    transition: background 0.2s ease;
+}
+
+.back-btn {
+    background: #2563eb;
+    color: white;
+    font-size: 1rem;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+}
+
+.back-btn:hover {
+    background: #1d4ed8;
+}
