@@ -88,7 +88,7 @@ function mezclarAleatorio(arr) {
   return copia;
 }
 
-// --- SISTEMA DE PUNTUACIONES FUNCIONANDO ---
+// Sistema de puntuaciones
 function loadAllPlayers() {
     try {
         const saved = localStorage.getItem("europeQuestPlayers");
@@ -112,7 +112,6 @@ function savePlayerProgress(name, maxLevel, bestScore) {
         players.push({ name: nameTrim, maxLevel: maxLevel, bestScore: bestScore });
     }
 
-    // Ordenar por nivel y luego por puntuación
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
     localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
@@ -139,7 +138,6 @@ function renderScores() {
     });
 }
 
-// --- LÓGICA DEL JUEGO ---
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
     if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
@@ -160,7 +158,7 @@ function returnToStart() { clearInterval(timer);
 }
 
 function openScores() {
-    renderScores(); // Carga y muestra datos
+    renderScores();
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('scoresScreen').style.display = 'block';
 }
@@ -202,7 +200,6 @@ function showQuestion(question) {
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
 
-    // Opciones en orden aleatorio cada vez
     const opcionesDesordenadas = mezclarAleatorio(question.options);
 
     opcionesDesordenadas.forEach(option => {
