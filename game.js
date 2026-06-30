@@ -1,294 +1,243 @@
-// Configuración
-const TIME_LIMIT = 15;
-const MAX_LIVES = 3;
-const POINTS_CORRECT = 10;
+let playerName = "";
+let points = 0;
+let lives = 3;
+let currentLevel = 1;
+let timer = null;
+const TIME_LIMIT = 10;
 
-// ✅ NIVELES 1 A 10 con tus preguntas e imágenes
-const levels = [
+const questions = [
     {
-        id: 1,
-        question: "Where is Europe located?",
-        image: "imagenes/europe-map.jpg",
-        options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Africa", "D) Asia"],
-        correct: 1
+        level: 1,
+        text: "In which hemisphere is Europe located?",
+        image: "imagenes/europe-countries.jpg",
+        options: ["A) Southern", "B) Northern", "C) Eastern", "D) Western"],
+        correct: "B) Northern"
     },
     {
-        id: 2,
-        question: "What ocean borders Europe to the west?",
+        level: 2,
+        text: "Which ocean lies to the west of Europe?",
         image: "imagenes/atlantic-ocean.jpg",
-        options: ["A) Atlantic Ocean", "B) Pacific Ocean", "C) Indian Ocean", "D) Southern Ocean"],
-        correct: 0
+        options: ["A) Pacific", "B) Indian", "C) Atlantic", "D) Arctic"],
+        correct: "C) Atlantic"
     },
     {
-        id: 3,
-        question: "How many stars are on the European Union flag?",
+        level: 3,
+        text: "How many stars are on the European Union flag?",
         image: "imagenes/eu-flag.jpg",
         options: ["A) 10", "B) 12", "C) 15", "D) 20"],
-        correct: 1
+        correct: "B) 12"
     },
     {
-        id: 4,
-        question: "Which language is common in Europe?",
-        image: "imagenes/europe-countries.jpg",
+        level: 4,
+        text: "Which language is widely spoken in Europe?",
+        image: "imagenes/european-union.jpg",
         options: ["A) German", "B) Japanese", "C) Hindi", "D) Chinese"],
-        correct: 0
+        correct: "A) German"
     },
     {
-        id: 5,
-        question: "Which country is famous for pizza and pasta?",
+        level: 5,
+        text: "Which country is famous for pizza and pasta?",
         image: "imagenes/italy.jpg",
         options: ["A) France", "B) Germany", "C) Italy", "D) Spain"],
-        correct: 2
+        correct: "C) Italy"
     },
     {
-        id: 6,
-        question: "Which civilization influenced European philosophy and politics?",
+        level: 6,
+        text: "Which civilization greatly influenced European culture?",
         image: "imagenes/colosseum.jpg",
-        options: ["A) Roman Empire", "B) Maya", "C) Inca", "D) Aztec"],
-        correct: 0
+        options: ["A) Roman", "B) Mayan", "C) Inca", "D) Aztec"],
+        correct: "A) Roman"
     },
     {
-        id: 7,
-        question: "Where is the Eiffel Tower located?",
+        level: 7,
+        text: "In which country is the Eiffel Tower located?",
         image: "imagenes/eiffel-tower.jpg",
-        options: ["A) Italy", "B) Spain", "C) France", "D) Germany"],
-        correct: 2
+        options: ["A) Italy", "B) Spain", "C) France", "D) Portugal"],
+        correct: "C) France"
     },
     {
-        id: 8,
-        question: "Which mountain range is in Europe?",
+        level: 8,
+        text: "Which mountain range is found in Europe?",
         image: "imagenes/alps.jpg",
         options: ["A) Andes", "B) Alps", "C) Rockies", "D) Himalayas"],
-        correct: 1
+        correct: "B) Alps"
     },
     {
-        id: 9,
-        question: "Europe has more than...",
-        image: "imagenes/europe-countries.jpg",
-        options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 30 countries"],
-        correct: 2
+        level: 9,
+        text: "What is the capital city of Germany?",
+        image: "imagenes/berlin.jpg",
+        options: ["A) Paris", "B) Rome", "C) Berlin", "D) Madrid"],
+        correct: "C) Berlin"
     },
     {
-        id: 10,
-        question: "What do the stars on the EU flag represent?",
+        level: 10,
+        text: "What do the stars on the EU flag represent?",
         image: "imagenes/eu-flag.jpg",
-        options: ["A) War", "B) Tourism", "C) Money", "D) Unity and Harmony"],
-        correct: 3
+        options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity"],
+        correct: "D) Unity"
     }
 ];
 
-// Variables globales
-let playerName = "";
-let unlockedLevel = 1;
-let currentLevel = null;
-let currentScore = 0;
-let currentLives = 0;
-let timerInterval;
-
-// --- ✅ Guardado de TODOS los participantes ---
 function loadAllPlayers() {
-    const saved = localStorage.getItem("europeQuestAllPlayers");
+    const saved = localStorage.getItem("europeQuestPlayers");
     return saved ? JSON.parse(saved) : [];
 }
 
 function savePlayerProgress(name, maxLevel, bestScore) {
     const players = loadAllPlayers();
     const existing = players.find(p => p.name.trim().toLowerCase() === name.trim().toLowerCase());
-
     if (existing) {
         if (maxLevel > existing.maxLevel) existing.maxLevel = maxLevel;
         if (bestScore > existing.bestScore) existing.bestScore = bestScore;
     } else {
-        players.push({
-            name: name.trim(),
-            maxLevel: maxLevel,
-            bestScore: bestScore
-        });
+        players.push({ name: name.trim(), maxLevel: maxLevel, bestScore: bestScore });
     }
-
-    // Ordenar por nivel y puntaje
     players.sort((a, b) => b.maxLevel - a.maxLevel || b.bestScore - a.bestScore);
-    localStorage.setItem("europeQuestAllPlayers", JSON.stringify(players));
-    unlockedLevel = maxLevel;
+    localStorage.setItem("europeQuestPlayers", JSON.stringify(players));
 }
 
-function renderAllScores() {
+function renderScores() {
     const players = loadAllPlayers();
-    const tbody = document.getElementById("allScoresBody");
+    const tbody = document.getElementById("scoresBody");
     tbody.innerHTML = "";
-
     if (players.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4">No players registered yet</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4">No players yet</td></tr>`;
         return;
     }
-
-    players.forEach((player, index) => {
+    players.forEach((p, i) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${player.name}</td>
-            <td>Level ${player.maxLevel}</td>
-            <td>${player.bestScore}</td>
-        `;
+        row.innerHTML = `<td>${i + 1}</td><td>${p.name}</td><td>Level ${p.maxLevel}</td><td>${p.bestScore}</td>`;
         tbody.appendChild(row);
     });
 }
 
-// --- Interfaz ---
-function openLevelMap() {
-    playerName = document.getElementById("playerName").value.trim();
-    if (!playerName) {
-        alert("⚠️ Please enter your name first!");
-        return;
-    }
-    // Cargar progreso del jugador actual
-    const players = loadAllPlayers();
-    const me = players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
-    unlockedLevel = me ? me.maxLevel : 1;
+function startGame() {
+    playerName = document.getElementById('playerName').value.trim();
+    if (!playerName) { alert("⚠️ Please enter your name first!"); return; }
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    document.getElementById('displayName').textContent = playerName;
+    resetProgress();
+}
 
-    document.getElementById("mainStartScreen").classList.add("hidden");
-    document.getElementById("levelMapScreen").classList.remove("hidden");
-    updateLevelNodes();
+function resetProgress() {
+    points = 0;
+    lives = 3;
+    currentLevel = 1;
+    updateInfo();
+    updateLevelsState();
+}
+
+function returnToStart() {
+    clearInterval(timer);
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'flex';
 }
 
 function openScores() {
-    document.getElementById("mainStartScreen").classList.add("hidden");
-    document.getElementById("scoresScreen").classList.remove("hidden");
-    renderAllScores();
+    renderScores();
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('scoresScreen').style.display = 'block';
 }
 
-function backToMain() {
-    document.getElementById("levelMapScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.add("hidden");
-    document.getElementById("victoryScreen").classList.add("hidden");
-    document.getElementById("scoresScreen").classList.add("hidden");
-    document.getElementById("mainStartScreen").classList.remove("hidden");
+function closeScores() {
+    document.getElementById('scoresScreen').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'flex';
 }
 
-function updateLevelNodes() {
-    const nodes = document.querySelectorAll(".level-node");
-    nodes.forEach(node => {
-        const lvl = parseInt(node.dataset.level);
-        node.classList.toggle("locked", lvl > unlockedLevel);
-        node.onclick = lvl <= unlockedLevel ? () => startLevel(lvl) : null;
+function updateInfo() {
+    document.getElementById('points').textContent = points;
+    document.getElementById('lives').textContent = lives;
+    document.getElementById('timeLeft').textContent = TIME_LIMIT;
+}
+
+function updateLevelsState() {
+    document.querySelectorAll('.level').forEach(level => {
+        const num = parseInt(level.dataset.level);
+        level.classList.toggle('unlocked', num <= currentLevel);
+        level.classList.toggle('locked', num > currentLevel);
     });
-    document.getElementById("unlockedDisplay").textContent = unlockedLevel;
-}
-
-function returnToMap() {
-    clearInterval(timerInterval);
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.add("hidden");
-    document.getElementById("victoryScreen").classList.add("hidden");
-    document.getElementById("levelMapScreen").classList.remove("hidden");
-}
-
-// --- Lógica del juego ---
-function startLevel(levelId) {
-    currentLevel = levels.find(l => l.id === levelId);
-    currentScore = 0;
-    currentLives = MAX_LIVES;
-
-    document.getElementById("levelMapScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-
-    document.getElementById("displayName").textContent = playerName;
-    document.getElementById("currentLevel").textContent = currentLevel.id;
-    document.getElementById("lives").textContent = currentLives;
-    document.getElementById("score").textContent = currentScore;
-
-    showQuestion();
-}
-
-function showQuestion() {
-    clearInterval(timerInterval);
-    const q = currentLevel;
-
-    document.getElementById("questionText").textContent = q.question;
-    document.getElementById("questionImage").innerHTML = `<img src="${q.image}" alt="Clue">`;
-
-    const optionsDiv = document.getElementById("optionsContainer");
-    optionsDiv.innerHTML = "";
-    q.options.forEach((opt, i) => {
-        const btn = document.createElement("button");
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(i);
-        optionsDiv.appendChild(btn);
-    });
-
-    startTimer();
 }
 
 function startTimer() {
     let timeLeft = TIME_LIMIT;
-    document.getElementById("timer").textContent = timeLeft;
-    timerInterval = setInterval(() => {
+    document.getElementById('timeLeft').textContent = timeLeft;
+    clearInterval(timer);
+    timer = setInterval(() => {
         timeLeft--;
-        document.getElementById("timer").textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            wrongAnswer();
-        }
+        document.getElementById('timeLeft').textContent = timeLeft;
+        if (timeLeft <= 0) { clearInterval(timer); timeUp(); }
     }, 1000);
 }
 
-function checkAnswer(selectedIndex) {
-    clearInterval(timerInterval);
-    const q = currentLevel;
+function timeUp() {
+    alert("⏰ Time's up!");
+    checkAnswer(null, null, currentLevel);
+}
 
-    if (selectedIndex === q.correct) {
+function showQuestion(question) {
+    document.getElementById('questionText').textContent = question.text;
+    document.getElementById('questionImage').src = question.image;
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+    question.options.forEach(option => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.textContent = option;
+        div.onclick = () => checkAnswer(option, question.correct, question.level);
+        container.appendChild(div);
+    });
+    document.getElementById('questionModal').style.display = 'block';
+    startTimer();
+}
+
+function checkAnswer(selected, correctAnswer, levelNumber) {
+    clearInterval(timer);
+    const soundCorrect = document.getElementById('correctSound');
+    const soundWrong = document.getElementById('wrongSound');
+    if (selected === correctAnswer) {
+        points += 10;
+        soundCorrect.play().catch(() => {});
         alert("✅ Correct!");
-        currentScore += POINTS_CORRECT;
-        document.getElementById("score").textContent = currentScore;
-        levelCompleted();
+        if (levelNumber === currentLevel && currentLevel < 10) currentLevel++;
+        if (levelNumber === 10) {
+            savePlayerProgress(playerName, 10, points);
+            document.getElementById('finalScore').textContent = points;
+            document.getElementById('questionModal').style.display = 'none';
+            document.getElementById('victoryScreen').style.display = 'block';
+            return;
+        }
     } else {
-        wrongAnswer();
+        lives -= 1;
+        soundWrong.play().catch(() => {});
+        alert("❌ Wrong or time's up!");
+        if (lives <= 0) {
+            savePlayerProgress(playerName, currentLevel - 1, points);
+            alert(`💀 Game Over! Final score: ${points}`);
+            returnToStart();
+            return;
+        }
     }
+    updateInfo();
+    updateLevelsState();
+    closeQuestion();
 }
 
-function wrongAnswer() {
-    alert("❌ Wrong answer!");
-    currentLives--;
-    document.getElementById("lives").textContent = currentLives;
-    if (currentLives <= 0) {
-        gameOver();
-    } else {
-        levelFailed();
-    }
+function closeQuestion() {
+    clearInterval(timer);
+    document.getElementById('questionModal').style.display = 'none';
 }
 
-function levelCompleted() {
-    const newMaxLevel = currentLevel.id;
-    savePlayerProgress(playerName, newMaxLevel, currentScore);
-
-    // Victoria final al terminar nivel 10
-    if (currentLevel.id === 10) {
-        document.getElementById("gameScreen").classList.add("hidden");
-        document.getElementById("finalVictoryScore").textContent = currentScore;
-        document.getElementById("victoryScreen").classList.remove("hidden");
-        return;
-    }
-
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.remove("hidden");
-    document.getElementById("resultTitle").textContent = `🎉 Level ${currentLevel.id} Completed!`;
-    document.getElementById("resultText").innerHTML = `Great job! Score: <strong>${currentScore}</strong><br>Next level unlocked.`;
-}
-
-function levelFailed() {
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.remove("hidden");
-    document.getElementById("resultTitle").textContent = `⚠️ Level ${currentLevel.id} Not Passed`;
-    document.getElementById("resultText").innerHTML = `Answer correctly to advance.<br>Try again!`;
-}
-
-function gameOver() {
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.remove("hidden");
-    document.getElementById("resultTitle").textContent = `💀 Game Over`;
-    document.getElementById("resultText").innerHTML = `You lost all lives.<br>Final score: <strong>${currentScore}</strong>`;
-}
-
-// Cargar datos al inicio
-window.onload = renderAllScores;
+window.addEventListener('load', () => {
+    document.querySelectorAll('.level').forEach(level => {
+        level.addEventListener('click', () => {
+            const num = parseInt(level.dataset.level);
+            if (num === currentLevel) {
+                const question = questions.find(q => q.level === num);
+                if (question) showQuestion(question);
+            } else if (num > currentLevel) {
+                alert(`🔒 Level ${num} is locked! Complete level ${currentLevel} first.`);
+            }
+        });
+    });
+});
