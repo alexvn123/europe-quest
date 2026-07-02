@@ -1,8 +1,8 @@
-     // ---------------- CONFIGURACIÓN ----------------
+// ---------------- CONFIGURACIÓN ----------------
 const GIST_ID = "9e578094f485cb35ff0b76f37c5cb5b6";
-const GIST_FILENAME = "europe-quest-ranking.json";
+const GIST_FILENAME = "europe-quest-ranking";
 const GITHUB_TOKEN = "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";
-const TIME_LIMIT = 10;
+const TIME_LIMIT = 9;
 // ------------------------------------------------
 
 let playerName = "";
@@ -10,6 +10,7 @@ let points = 0;
 let lives = 3;
 let currentLevel = 1;
 let timer = null;
+let puzzlePieces = 0; // ✅ NUEVO: Contador de piezas del rompecabezas
 
 const questions = [
     { level: 1, text: "Where is Europe located?", image: "imagenes/europe-map.jpg", options: ["A) Southern Hemisphere", "B) Northern Hemisphere", "C) Eastern", "D) Western"], correct: "B) Northern Hemisphere" },
@@ -23,6 +24,7 @@ const questions = [
     { level: 9, text: "Europe has more than...", image: "imagenes/berlin.jpg", options: ["A) 10 countries", "B) 20 countries", "C) 40 countries", "D) 60 countries"], correct: "C) 40 countries" },
     { level: 10, text: "what do the stars on the EU flag represent?", image: "imagenes/eu-flag.jpg", options: ["A) War", "B) Tourism", "C) Wealth", "D) Unity and Harmony"], correct: "D) Unity and Harmony" }
 ];
+
 function shuffleArray(arr) {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -119,6 +121,7 @@ function resetGame() {
     points = 0;
     lives = 3;
     currentLevel = 1;
+    puzzlePieces = 0; // ✅ Reinicia piezas al empezar nueva partida
     updateHUD();
     updateLevels();
 }
@@ -127,6 +130,9 @@ function updateHUD() {
     document.getElementById("displayName").textContent = playerName;
     document.getElementById("points").textContent = points;
     document.getElementById("lives").textContent = lives;
+    // ✅ Muestra las piezas en pantalla (agrega este elemento en tu HTML si quieres verlo)
+    const piecesEl = document.getElementById("puzzlePieces");
+    if (piecesEl) piecesEl.textContent = `${puzzlePieces}/10 🧩`;
 }
 
 function updateLevels() {
@@ -187,18 +193,25 @@ function checkAnswer(selected, correct, lvl) {
     // Respuesta dada
     if (selected === correct) {
         points += 10;
-        alert("✅ Correct!");
-        if (lvl === currentLevel) currentLevel++;
+        alert("✅ Correct! You got 1 puzzle piece! 🧩");
+        if (lvl === currentLevel) {
+            currentLevel++;
+            puzzlePieces++; // ✅ Ganas una pieza al pasar de nivel
+        }
         if (lvl === 10) {
             saveScore(playerName, 10, points);
             document.getElementById("finalScore").textContent = points;
+            // ✅ Mensaje especial al completar la copa
+            setTimeout(() => {
+                alert("🏆 CONGRATULATIONS! You collected all 10 pieces and completed the trophy puzzle! 🧩✨");
+            }, 500);
             document.getElementById("questionModal").style.display = "none";
             document.getElementById("victoryModal").style.display = "block";
             return;
         }
     } else {
         lives--;
-        alert("❌ Wrong!");
+        alert("❌ Wrong! No piece this time.");
         if (lives <= 0) {
             saveScore(playerName, currentLevel - 1, points);
             alert(`Game Over! Score: ${points}`);
@@ -240,4 +253,5 @@ window.addEventListener("load", () => {
         });
     });
 });
+         
 
